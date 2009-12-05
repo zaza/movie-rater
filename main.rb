@@ -26,16 +26,22 @@ def extractMovieName(dir)
 end
 
 def scanDirs(path)
-  dirs = [] 
+  dirs_hash = {}
   if File.directory?(path)
     # exclude
     Find.find(path) do |f|
-      if f =~ /^(d:\/temp\/movies\/[a-zA-Z-]+\/)(.+)$/
-        dirs << $2 
+      if f =~ /^d:\/temp\/movies\/([a-zA-Z]+)\/(.+)$/
+        dirs = dirs_hash[$1]
+        if dirs.nil?
+          dirs = []
+        end
+        dirs << $2
+        dirs_hash[$1] = dirs 
       end
     end
   end
-  return dirs
+  p dirs_hash
+  return dirs_hash
 end
 
 def getMovieRatingFromImdb(dir)
@@ -108,8 +114,8 @@ dirs = scanDirs("d:/temp/movies")
 puts "dirs=" + dirs.size.to_s
 for d in dirs
   # check in 'movies' first
-  i = getMovieRatingFromFilmweb(d)# unless movies.has_key?(d)
-  movies[d] = i
+#  i = getMovieRatingFromFilmweb(d)# unless movies.has_key?(d)
+#  movies[d] = i
   # if not found check on filmweb
     # if found add to 'movies.txt' with rating
     # else add to 'movies.txt' without rating
