@@ -1,8 +1,9 @@
 class Item
-  def initialize(d, t, r)
+  def initialize(d, t, r, c)
     @dir = d
     @title = t
     @rating = r
+    @category = c
   end
   def dir  
     @dir  
@@ -14,6 +15,6 @@ class Item
     @rating
   end  
   def to_s
-      "#{@dir}\t#{@title}\t#{@rating}"
+      "#{@rating}\t#{@category}\t#{@dir}\t#{@title}"
   end 
 end
