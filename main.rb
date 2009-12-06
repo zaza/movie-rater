@@ -24,6 +24,7 @@ end
 def extractMovieName(dir)
   # TODO: remove (2009), R5, DVD, etc
   dir = dir.downcase
+  dir = dir.gsub('dd5.1','')
   dir = dir.gsub('.',' ')
   dir = dir.gsub('_',' ')
   dir = dir.gsub('-diamond','')
@@ -38,6 +39,7 @@ def extractMovieName(dir)
   dir = dir.gsub('lektor','')
   dir = dir.gsub(' pl','')
   dir = dir.gsub('rip','')
+  dir = dir.gsub('xvid-alliance','')
   dir = dir.gsub('xvid','')
   dir = dir.gsub('ac3','')
   dir = dir.gsub('rmvbhunters','')
