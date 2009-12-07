@@ -156,12 +156,12 @@ def getMovieRating(dirs_hash)
         i = Item.new(dir, '', 0, category)
       else
         title = firstResult_a.inner_html
-        # this might by 'aka' section
         span = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")[0]
         text = span.inner_html
         if text =~ /(ocena:)([0-9]{1}\.[0-9]{1,2})/
           i = Item.new(dir, title, $2, category)
         else
+          # span[0] might be the 'a.k.a.' section, try next span
           span = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")[1]
           if span.nil?
             i = Item.new(dir, '', 0, category)
@@ -184,13 +184,13 @@ movies = readFile("movies.txt")
 puts "movies=" + movies.size.to_s
 dirs_hash = scanDirs("d:/temp/movies")
 puts "categories=" + dirs_hash.size.to_s
-  # check in 'movies' first
-movies = getMovieRating(dirs_hash)
+# check in 'movies' first
 #  movies[d] = i
-  # if not found check on filmweb
+  # if not found check on filmweb || if found but 3 months old
+movies = getMovieRating(dirs_hash)
     # if found add to 'movies.txt' with rating
     # else add to 'movies.txt' without rating
   # sort by rating, those with rating first
   # dump movies to file
-  # print out results
+  # print out results (if specified, narrow to category)
 puts "Done."
