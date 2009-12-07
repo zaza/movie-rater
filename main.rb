@@ -4,7 +4,6 @@ require 'hpricot'
 require 'mechanize'
 require 'find'
 require 'item'
-#require 'unicode'
 
 def readFile(f)
   movies = {}
@@ -71,6 +70,7 @@ def extractMovieName(dir)
   dir = dir.gsub('bluray','')
   dir = dir.gsub('1996','')
   dir = dir.gsub('1997','')
+  dir = dir.gsub('1998','')
   dir = dir.gsub('2001','')
   dir = dir.gsub('2002','')
   dir = dir.gsub('2003','')
@@ -86,10 +86,10 @@ end
 
 class String
   def to_ascii
-    ascii = "acelnoszzACELNOSZZ"
     cep = "\271\346\352\263\361\363\234\277\237\245\306\312\243\321\323\214\257\217"
-#    s = Iconv.new("cp1250", "UTF-8").iconv(self)
-    self.tr!(cep,ascii)
+    ascii = "acelnoszzACELNOSZZ"
+#   s = Iconv.new("cp1250", "UTF-8").iconv(self)
+    self.tr(cep,ascii)
   end
 end
 
@@ -104,10 +104,7 @@ def scanDirs(path)
           if dirs.nil?
             dirs = []
           end
-          d = $2
-#          d = Unicode.normalize_KD($2).gsub(/[^\x00-\x7F]/n,'')
-#          d = Iconv.iconv('Windows-1250', 'utf-8', $2)
-          dirs << d#.to_ascii
+          dirs << $2.to_ascii
           dirs_hash[$1] = dirs 
         end
       end
