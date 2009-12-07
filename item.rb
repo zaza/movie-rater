@@ -15,6 +15,6 @@ class Item
     @rating
   end  
   def to_s
-      "#{@rating}\t#{@category}\t#{@dir}\t#{@title}"
+      "#{@rating}\t#{@category}\t'#{@dir}'\t'#{@title}'"
   end 
 end

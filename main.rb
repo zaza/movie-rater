@@ -26,10 +26,11 @@ def extractMovieName(dir)
   dir = dir.gsub('dd5.1','')
   dir = dir.gsub('.',' ')
   dir = dir.gsub('_',' ')
+  dir = dir.gsub(/\[.*\].*/,'')
+  dir = dir.gsub(/\{.*\}.*/,'')
+  dir = dir.gsub(/\(.*\).*/,'')
+  dir = dir.gsub(/19|20[0-9]{2}.*/,'')
   dir = dir.gsub('-diamond','')
-  dir = dir.gsub(/\[.*\]/,'')
-  dir = dir.gsub(/\{.*\}/,'')
-  dir = dir.gsub(/\(.*\)/,'')
   dir = dir.gsub('ac3','')
   dir = dir.gsub('r5','')
   dir = dir.gsub('dvdrip','')
@@ -44,6 +45,7 @@ def extractMovieName(dir)
   dir = dir.gsub('rmvbhunters','')
   dir = dir.gsub('rmvb','')
   dir = dir.gsub('avi','')
+  dir = dir.gsub('subbed','')
   dir = dir.gsub('dub','')
   dir = dir.gsub(' 3d','')
   dir = dir.gsub(' scr','')
@@ -60,6 +62,7 @@ def extractMovieName(dir)
   dir = dir.gsub('-bestdivx','')
   dir = dir.gsub('proper','')
   dir = dir.gsub('untouched','')
+  dir = dir.gsub('unrated','')
   dir = dir.gsub('domino','')
   dir = dir.gsub('x264-cinefile','')
   dir = dir.gsub('limited','')
@@ -68,18 +71,6 @@ def extractMovieName(dir)
   dir = dir.gsub('komedia rom','')
   dir = dir.gsub('720p','')
   dir = dir.gsub('bluray','')
-  dir = dir.gsub('1996','')
-  dir = dir.gsub('1997','')
-  dir = dir.gsub('1998','')
-  dir = dir.gsub('2001','')
-  dir = dir.gsub('2002','')
-  dir = dir.gsub('2003','')
-  dir = dir.gsub('2004','')
-  dir = dir.gsub('2005','')
-  dir = dir.gsub('2006','')
-  dir = dir.gsub('2007','')
-  dir = dir.gsub('2008','')
-  dir = dir.gsub('2009','')
   dir = dir.gsub('-',' ')
   return dir.strip
 end
@@ -139,10 +130,12 @@ def getMovieRating(dirs_hash)
   dirs_hash.each_pair do |category,v|
     puts "======================================> #{category}"
     for dir in v
+      title = ''
+      rating = 0
   
       dir2 = extractMovieName(dir)
       puts "Looking for '" + dir2 +"'..."
-  
+      
       szukaj_form = page.forms[0]
       szukaj_form.q = dir2
       szukaj_form.c = 'film'
@@ -153,13 +146,13 @@ def getMovieRating(dirs_hash)
         i = Item.new(dir, '', 0, category)
       else
         title = firstResult_a.inner_html
-        span = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")[0]
-        text = span.inner_html
+        spans = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")
+        text = spans[0].inner_html
         if text =~ /(ocena:)([0-9]{1}\.[0-9]{1,2})/
           i = Item.new(dir, title, $2, category)
         else
           # span[0] might be the 'a.k.a.' section, try next span
-          span = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")[1]
+          span = spans[1]
           if span.nil?
             i = Item.new(dir, '', 0, category)
           else
