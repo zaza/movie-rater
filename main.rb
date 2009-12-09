@@ -145,7 +145,7 @@ def getMovieRating(dirs_hash)
       if firstResult_a.nil?
         i = Item.new(dir, '', 0, category)
       else
-        title = firstResult_a.inner_html
+        title = firstResult_a.inner_text.strip
         spans = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")
 
         # default
