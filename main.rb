@@ -126,9 +126,9 @@ def getMovieRating(dirs_hash)
 
   movies_hash = {}
 
-  dirs_hash.each_pair do |category,v|
+  dirs_hash.each_pair do |category, dirs|
     puts "======================================> Processing category: #{category}"
-    for dir in v
+    for dir in dirs
       title = ''
       rating = 0
 
@@ -142,7 +142,7 @@ def getMovieRating(dirs_hash)
       page = agent.submit(szukaj_form)
 
       # default
-      i = Item.new(dir, '', 0, category)
+      i = Item.new(dir, '', 0.0, category)
 
       firstResult_a = page.search("//a[@class='searchResultTitle']")[0]
       if !firstResult_a.nil?
@@ -153,7 +153,7 @@ def getMovieRating(dirs_hash)
           if !span.nil?
             text = span.inner_html
             if text =~ /(ocena:)([0-9]{1}\.[0-9]{1,2})/
-              i = Item.new(dir, title, $2, category)
+              i = Item.new(dir, title, $2.to_f, category)
               break
             end  
           end
@@ -174,12 +174,12 @@ puts "categories=" + dirs_hash.size.to_s
 # check in 'movies' first
 #  movies[d] = i
   # if not found check on filmweb || if found but 3 months old
-movies = getMovieRating(dirs_hash)
+movies_hash = getMovieRating(dirs_hash)
     # if found add to 'movies.txt' with rating
     # else add to 'movies.txt' without rating
   # sort by rating, those with rating first
 puts "======================================> Sorting"
-items_sorted = movies.values.sort
+items_sorted = movies_hash.values.sort
 puts items_sorted
 
   # dump movies to file
