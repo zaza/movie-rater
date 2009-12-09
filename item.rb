@@ -5,16 +5,19 @@ class Item
     @rating = r
     @category = c
   end
-  def dir  
-    @dir  
+  def dir
+    @dir
+  end
+  def title
+    @title
   end  
-  def title  
-    @title  
-  end  
-  def rating  
+  def rating
     @rating
-  end  
+  end
   def to_s
       "#{@rating}\t#{@category}\t'#{@dir}'\t'#{@title}'"
-  end 
+  end
+  def <=> other
+    other.rating <=> rating
+  end
 end

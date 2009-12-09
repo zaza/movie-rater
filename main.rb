@@ -96,7 +96,7 @@ def scanDirs(path)
             dirs = []
           end
           dirs << $2.to_ascii
-          dirs_hash[$1] = dirs 
+          dirs_hash[$1] = dirs
         end
       end
     end
@@ -106,67 +106,65 @@ def scanDirs(path)
 end
 
 def getMovieRating(dirs_hash)
- 
+
   url = 'http://www.filmweb.pl'
   agent = WWW::Mechanize.new
   page = agent.get(url)
   link = page.links.find{ |l| l.text == 'przejdź do Filmweb.pl' }
   if !link.nil?
     page = agent.click(link)
-  end  
-  
+  end
+
   link = page.links.find{ |l| l.text == 'Zaloguj się' }
   page = agent.click(link)
-  
+
   credentials = ARGV[0].split('@')
-  
+
   zaloguj_form = page.form('form')
   zaloguj_form.j_username = credentials[0]
   zaloguj_form.j_password = credentials[1]
   page = agent.submit(zaloguj_form)
-  
+
   movies_hash = {}
-  
+
   dirs_hash.each_pair do |category,v|
     puts "======================================> #{category}"
     for dir in v
       title = ''
       rating = 0
-  
+
       dir2 = extractMovieName(dir)
       puts "Looking for '" + dir2 +"'..."
-      
+
       szukaj_form = page.forms[0]
       szukaj_form.q = dir2
       szukaj_form.c = 'film'
       page = agent.submit(szukaj_form)
- 
+
       firstResult_a = page.search("//a[@class='searchResultTitle']")[0]
       if firstResult_a.nil?
         i = Item.new(dir, '', 0, category)
       else
         title = firstResult_a.inner_html
         spans = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")
-        text = spans[0].inner_html
-        if text =~ /(ocena:)([0-9]{1}\.[0-9]{1,2})/
-          i = Item.new(dir, title, $2, category)
-        else
-          # span[0] might be the 'a.k.a.' section, try next span
-          span = spans[1]
-          if span.nil?
-            i = Item.new(dir, '', 0, category)
-          else
+
+        # default
+        i = Item.new(dir, '', 0, category)
+        for i in (0..2)
+          span = spans[i]
+          if !span.nil?
             text = span.inner_html
             if text =~ /(ocena:)([0-9]{1}\.[0-9]{1,2})/
               i = Item.new(dir, title, $2, category)
+              break
             end  
           end
         end
+        puts i
+        movies_hash[dir] = i
       end
-      puts i
-      movies_hash[dir] = i 
     end
-  end  
+  end
   return movies_hash
 end
 
@@ -181,6 +179,10 @@ movies = getMovieRating(dirs_hash)
     # if found add to 'movies.txt' with rating
     # else add to 'movies.txt' without rating
   # sort by rating, those with rating first
+puts "---"
+items_sorted = movies.values.sort
+puts items_sorted
+
   # dump movies to file
   # print out results (if specified, narrow to category)
 puts "Done."
