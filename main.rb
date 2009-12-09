@@ -16,7 +16,6 @@ def readFile(f)
       end
     end
   end
-  #movies["moon"] = Item.new("moon","moon",9)
   return movies
 end
 
@@ -101,7 +100,7 @@ def scanDirs(path)
       end
     end
   end
-  p dirs_hash
+#  p dirs_hash
   return dirs_hash
 end
 
@@ -128,28 +127,27 @@ def getMovieRating(dirs_hash)
   movies_hash = {}
 
   dirs_hash.each_pair do |category,v|
-    puts "======================================> #{category}"
+    puts "======================================> Processing category: #{category}"
     for dir in v
       title = ''
       rating = 0
 
       dir2 = extractMovieName(dir)
-      puts "Looking for '" + dir2 +"'..."
+      print "Looking for '" + dir2 + "'... "
+      $\ = "\n"
 
       szukaj_form = page.forms[0]
       szukaj_form.q = dir2
       szukaj_form.c = 'film'
       page = agent.submit(szukaj_form)
 
+      # default
+      i = Item.new(dir, '', 0, category)
+
       firstResult_a = page.search("//a[@class='searchResultTitle']")[0]
-      if firstResult_a.nil?
-        i = Item.new(dir, '', 0, category)
-      else
+      if !firstResult_a.nil?
         title = firstResult_a.inner_text.strip
         spans = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")
-
-        # default
-        i = Item.new(dir, '', 0, category)
         for i in (0..2)
           span = spans[i]
           if !span.nil?
@@ -160,16 +158,17 @@ def getMovieRating(dirs_hash)
             end  
           end
         end
-        puts i
-        movies_hash[dir] = i
       end
+      print i
+      $\ = nil
+      movies_hash[dir] = i
     end
   end
   return movies_hash
 end
 
-movies = readFile("movies.txt")
-puts "movies=" + movies.size.to_s
+#movies = readFile("movies.txt")
+#puts "movies=" + movies.size.to_s
 dirs_hash = scanDirs("d:/temp/movies")
 puts "categories=" + dirs_hash.size.to_s
 # check in 'movies' first
@@ -179,7 +178,7 @@ movies = getMovieRating(dirs_hash)
     # if found add to 'movies.txt' with rating
     # else add to 'movies.txt' without rating
   # sort by rating, those with rating first
-puts "---"
+puts "======================================> Sorting"
 items_sorted = movies.values.sort
 puts items_sorted
 
