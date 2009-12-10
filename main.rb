@@ -10,7 +10,7 @@ def readFile(f)
   # path -> parsed name, rating
   if File.exist?(f)
     File.open(f) do |file|
-      while line=file.gets
+      while line = file.gets
         # TODO: parse
         puts line
       end
@@ -20,7 +20,9 @@ def readFile(f)
 end
 
 def extractMovieName(dir)
-  # TODO: remove (2009), R5, DVD, etc
+  while dir =~ /([A-Z][a-z]+)([A-Z][a-z]+)/
+    dir = dir.gsub(/([A-Z][a-z]+)([A-Z][a-z]+)/, $1+' '+$2)
+  end
   dir = dir.downcase
   dir = dir.gsub('dd5.1','')
   dir = dir.gsub('.',' ')
@@ -47,6 +49,7 @@ def extractMovieName(dir)
   dir = dir.gsub('subbed','')
   dir = dir.gsub('dub','')
   dir = dir.gsub(' 3d','')
+  dir = dir.gsub(' !','')
   dir = dir.gsub(' scr','')
   dir = dir.gsub('bbs','')
   dir = dir.gsub('-fxg','')
@@ -65,6 +68,8 @@ def extractMovieName(dir)
   dir = dir.gsub('domino','')
   dir = dir.gsub('x264-cinefile','')
   dir = dir.gsub('limited','')
+  dir = dir.gsub('bigfags','')
+  dir = dir.gsub('koniec','')
   dir = dir.gsub('thiller','')
   dir = dir.gsub('horror','')
   dir = dir.gsub('komedia rom','')
@@ -88,6 +93,7 @@ def scanDirs(path)
   excludes = ARGV[1].split(",")
   if File.directory?(path)
     Find.find(path) do |f|
+      # TODO: "d:/temp/movies"
       if f =~ /^d:\/temp\/movies\/([a-zA-Z-]+)\/(.+)$/
         if !excludes.include?($1)
           dirs = dirs_hash[$1]
@@ -100,7 +106,6 @@ def scanDirs(path)
       end
     end
   end
-#  p dirs_hash
   return dirs_hash
 end
 
@@ -142,7 +147,7 @@ def getMovieRating(dirs_hash)
       page = agent.submit(szukaj_form)
 
       # default
-      i = Item.new(dir, '', 0.0, category)
+      item = Item.new(dir, '', 0.0, category)
 
       firstResult_a = page.search("//a[@class='searchResultTitle']")[0]
       if !firstResult_a.nil?
@@ -153,15 +158,15 @@ def getMovieRating(dirs_hash)
           if !span.nil?
             text = span.inner_html
             if text =~ /(ocena:)([0-9]{1}\.[0-9]{1,2})/
-              i = Item.new(dir, title, $2.to_f, category)
+              item = Item.new(dir, title, $2.to_f, category)
               break
             end  
           end
         end
       end
-      print i
+      print item
       $\ = nil
-      movies_hash[dir] = i
+      movies_hash[dir] = item
     end
   end
   return movies_hash
@@ -180,8 +185,8 @@ movies_hash = getMovieRating(dirs_hash)
   # sort by rating, those with rating first
 puts "======================================> Sorting"
 items_sorted = movies_hash.values.sort
-puts items_sorted
 
   # dump movies to file
   # print out results (if specified, narrow to category)
+puts items_sorted
 puts "Done."
