@@ -2,5 +2,4 @@
 <loadpath>
 	<pathentry path="" type="src"/>
 	<pathentry path="org.rubypeople.rdt.launching.RUBY_CONTAINER" type="con"/>
-	<pathentry path="D:/apps/Ruby/lib/ruby/gems/1.8/gems/unicode-0.1" type="lib"/>
 </loadpath>
