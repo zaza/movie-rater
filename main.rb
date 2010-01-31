@@ -61,6 +61,7 @@ def extractMovieName(dir)
   dir = dir.gsub('-80m','')
   dir = dir.gsub('-ruby','')
   dir = dir.gsub('-kjs','')
+  dir = dir.gsub('-done','')
   dir = dir.gsub('-bestdivx','')
   dir = dir.gsub('proper','')
   dir = dir.gsub('untouched','')
@@ -93,9 +94,9 @@ def scanDirs(path)
   excludes = ARGV[1].split(",")
   if File.directory?(path)
     Find.find(path) do |f|
-      # TODO: "d:/temp/movies"
-      if f =~ /^d:\/temp\/movies\/([a-zA-Z-]+)\/(.+)$/
-        if !excludes.include?($1)
+      # TODO: hardcoded path
+      if f =~ /^f:\/media\/movies\/([a-zA-Z-]+)\/(.+)$/
+        if !excludes.include?($1) && FileTest.directory?(f)
           dirs = dirs_hash[$1]
           if dirs.nil?
             dirs = []
@@ -174,7 +175,7 @@ end
 
 #movies = readFile("movies.txt")
 #puts "movies=" + movies.size.to_s
-dirs_hash = scanDirs("d:/temp/movies")
+dirs_hash = scanDirs("f:/media/movies")
 puts "categories=" + dirs_hash.size.to_s
 # check in 'movies' first
 #  movies[d] = i
