@@ -43,10 +43,14 @@ def extractMovieName(dir)
   dir = dir.gsub('french','')
   dir = dir.gsub(' pl','')
   dir = dir.gsub('dvbrip','')
+  dir = dir.gsub('brrip','')
   dir = dir.gsub('rip','')
   dir = dir.gsub('xvid-alliance','')
+  dir = dir.gsub('xvid-er','')
+  dir = dir.gsub('xvid-ktks','')
   dir = dir.gsub('xvid','')
   dir = dir.gsub('divx','')
+  dir = dir.gsub('ac3-vision','')
   dir = dir.gsub('ac3','')
   dir = dir.gsub('rmvbhunters','')
   dir = dir.gsub('rmvb','')
@@ -54,6 +58,8 @@ def extractMovieName(dir)
   dir = dir.gsub('subbed','')
   dir = dir.gsub('dub','')
   dir = dir.gsub(' 3d','')
+  dir = dir.gsub('480p','')
+  dir = dir.gsub('720p','')
   dir = dir.gsub(' !','')
   dir = dir.gsub(' scr','')
   dir = dir.gsub('bbs','')
@@ -110,7 +116,7 @@ def scanDirs(path)
   if File.directory?(path)
     Find.find(path) do |f|
       # TODO: hardcoded path
-      if f =~ /^f:\/media\/movies\/([a-zA-Z-]+)\/(.+)$/
+      if f =~ /^f:\/media\/movies\/([a-zA-Z- ,]+)\/(.+)$/
         if !excludes.include?($1) && FileTest.directory?(f)
           dirs = dirs_hash[$1]
           if dirs.nil?
