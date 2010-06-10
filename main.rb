@@ -156,10 +156,11 @@ def getMovieRating(dirs_hash)
       dir2 = extractMovieName(dir)
       print "Looking for '" + dir2 + "'... "
       $\ = "\n"
-
+      
+      # http://www.filmweb.pl/search/film
       szukaj_form = page.forms[0]
       szukaj_form.q = dir2
-      szukaj_form.c = 'film'
+      #szukaj_form.c = 'film'
       page = agent.submit(szukaj_form)
 
       # default
@@ -168,17 +169,11 @@ def getMovieRating(dirs_hash)
       firstResult_a = page.search("//a[@class='searchResultTitle']")[0]
       if !firstResult_a.nil?
         title = firstResult_a.inner_text.strip
-        spans = page.search("//span[@style='color:#333; font-size: 0.9em; text-decoration: none;']")
-        for i in (0..2)
-          span = spans[i]
-          if !span.nil?
-            text = span.inner_html
-            if text =~ /(ocena:)([0-9]{1}\.[0-9]{1,2})/
-              item = Item.new(dir, title, $2.to_f, category)
-              break
-            end  
-          end
-        end
+        firstSpanResultRating = page.search("//div[@class='searchResultRating']/span")[0];
+        text = firstSpanResultRating.inner_html
+        if text =~ /(ocena: )([0-9]{1}\.[0-9]{1,2})/
+          item = Item.new(dir, title, $2.to_f, category)
+        end  
       end
       print item
       $\ = nil
