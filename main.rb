@@ -160,8 +160,8 @@ def getMovieRating(dirs_hash)
       # http://www.filmweb.pl/search/film
       szukaj_form = page.forms[0]
       szukaj_form.q = dir2
-      #szukaj_form.c = 'film'
       page = agent.submit(szukaj_form)
+      # or use "?q=<dir2>&amp;alias=film"
 
       # default
       item = Item.new(dir, '', 0.0, category)
