@@ -177,16 +177,20 @@ def getMovieRating(dirs_hash)
 
       # default
       item = Item.new(dir, '', 0.0, category)
-      # first 'film' in the result list
-      searchResultTypeAlias_span = page.search("//span[@class='searchResultTypeAlias' and text()='[film]']")[0]
-      searchResultTitle_a = searchResultTypeAlias_span.next_sibling.next_sibling.at("a")
-      #p searchResultTitle_a
-      if !searchResultTitle_a.nil?
+      searchResultTitles_a = page.search("//a[@class='searchResultTitle']")
+      for searchResultTitle_a in searchResultTitles_a
+        li = searchResultTitle_a.parent.parent
+        #osoba = li.search("span[@class='searchResultTypeAlias' and text()='[osoba]']")[0]
+        osoba = li.search("span[text()='[osoba]']")[0]
+        if (!osoba.nil?) # skip [osoba]
+          next
+        end
         title = searchResultTitle_a.inner_text.strip
         searchResultRating_span = searchResultTitle_a.parent.parent.at("div[@class='searchResultRating']/span")
         text = searchResultRating_span.inner_html
         if text =~ /(ocena: )([0-9]{1}\.[0-9]{1,2})/
           item = Item.new(dir, title, $2.to_f, category)
+          break
         end  
       end
       print item
