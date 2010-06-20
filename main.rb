@@ -119,7 +119,7 @@ def scanDirs(path)
   if File.directory?(path)
     Find.find(path) do |f|
       # TODO: hardcoded path
-      if f =~ /^f:\/media\/movies\/([a-zA-Z\- ,]+)\/(.+)$/
+      if f =~ /^d:\/media\/movies\/([a-zA-Z\- ,]+)\/(.+)$/
         if !excludes.include?($1) && FileTest.directory?(f)
           dirs = dirs_hash[$1]
           if dirs.nil?
@@ -174,12 +174,14 @@ def getMovieRating(dirs_hash)
 
       # default
       item = Item.new(dir, '', 0.0, category)
-
-      firstResult_a = page.search("//a[@class='searchResultTitle']")[0]
-      if !firstResult_a.nil?
-        title = firstResult_a.inner_text.strip
-        firstSpanResultRating = page.search("//div[@class='searchResultRating']/span")[0];
-        text = firstSpanResultRating.inner_html
+      # first 'film' in the result list
+      searchResultTypeAlias_span = page.search("//span[@class='searchResultTypeAlias' and text()='[film]']")[0]
+      searchResultTitle_a = searchResultTypeAlias_span.next_sibling.next_sibling.at("a")
+      #p searchResultTitle_a
+      if !searchResultTitle_a.nil?
+        title = searchResultTitle_a.inner_text.strip
+        searchResultRating_span = searchResultTitle_a.parent.parent.at("div[@class='searchResultRating']/span")
+        text = searchResultRating_span.inner_html
         if text =~ /(ocena: )([0-9]{1}\.[0-9]{1,2})/
           item = Item.new(dir, title, $2.to_f, category)
         end  
@@ -194,7 +196,8 @@ end
 
 #movies = readFile("movies.txt")
 #puts "movies=" + movies.size.to_s
-dirs_hash = scanDirs("f:/media/movies")
+# TODO: hardcoded path
+dirs_hash = scanDirs("d:/media/movies")
 puts "categories=" + dirs_hash.size.to_s
 # check in 'movies' first
 #  movies[d] = i
