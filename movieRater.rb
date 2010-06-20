@@ -115,12 +115,15 @@ end
 
 def scanDirs(path)
   dirs_hash = {}
-  excludes = ARGV[1].split(",")
+  excludes = ARGV[2].split(",")
   if File.directory?(path)
-    Find.find(path) do |f|
-      # TODO: hardcoded path
-      if f =~ /^d:\/media\/movies\/([a-zA-Z\- ,]+)\/(.+)$/
-        if !excludes.include?($1) && FileTest.directory?(f)
+    # all subdirs at depth of 2
+    subdirs = Dir[File.join(path, * ["*"] * 2 + [""])] 
+    for subdir in subdirs
+      f = subdir.gsub(path, '')
+      # '/<category>/<title>/'
+      if f =~ /^\/([a-zA-Z\- ,]+)\/(.+)\/$/
+        if !excludes.include?($1) #&& FileTest.directory?(f)
           dirs = dirs_hash[$1]
           if dirs.nil?
             dirs = []
@@ -147,7 +150,7 @@ def getMovieRating(dirs_hash)
   link = page.links.find{ |l| l.text == 'Zaloguj się' }
   page = agent.click(link)
 
-  credentials = ARGV[0].split('@')
+  credentials = ARGV[1].split('@')
 
   zaloguj_form = page.form('form')
   zaloguj_form.j_username = credentials[0]
@@ -196,8 +199,7 @@ end
 
 #movies = readFile("movies.txt")
 #puts "movies=" + movies.size.to_s
-# TODO: hardcoded path
-dirs_hash = scanDirs("d:/media/movies")
+dirs_hash = scanDirs(ARGV[0])
 puts "categories=" + dirs_hash.size.to_s
 # check in 'movies' first
 #  movies[d] = i
