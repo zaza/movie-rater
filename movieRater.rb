@@ -68,6 +68,7 @@ def extractMovieName(dir)
   dir = dir.gsub('p24','')
   dir = dir.gsub('po polsku','')
   dir = dir.gsub('proper','')
+  dir = dir.gsub('super custon','')
   dir = dir.gsub('r5','')
   dir = dir.gsub('readnfo','')
   dir = dir.gsub('rip','')
@@ -139,9 +140,11 @@ end
 
 def getMovieRating(dirs_hash)
 
-  url = 'http://www.filmweb.pl'
+#  url = 'http://www.filmweb.pl'
+  url = 'http://www.filmweb.pl/login'
   agent = WWW::Mechanize.new
   page = agent.get(url)
+=begin
   link = page.links.find{ |l| l.text == 'przejdź do Filmweb.pl' }
   if !link.nil?
     page = agent.click(link)
@@ -149,7 +152,7 @@ def getMovieRating(dirs_hash)
 
   link = page.links.find{ |l| l.text == 'Zaloguj się' }
   page = agent.click(link)
-
+=end
   credentials = ARGV[1].split('@')
 
   zaloguj_form = page.form('form')
