@@ -218,13 +218,13 @@ public class MovieRater {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException, SAXException {
-		Map dirs_hash = scanDirs(args[0], args[2]);
+		Map dirs_hash = scanDirs(args[0], args[1]);
 		System.out.println("categories=" + dirs_hash.size());
 		
 		Map movies_hash = getMovieRating(dirs_hash, args[1]);
 		System.out.println("======================================> Sorting");
 		Map items_sorted = sortByValue(movies_hash);
-		for (Iterator iterator = items_sorted.entrySet().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = items_sorted.values().iterator(); iterator.hasNext();) {
 			Item item = (Item) iterator.next();
 			System.out.println(item.toString());
 		}
