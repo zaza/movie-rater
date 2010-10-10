@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 public class MovieRater {
 
 	private static String extractMovieName(String subdir) {
+		// TODO: implement
 		//	  while dir =~ /([A-Z][a-z]{2,})([A-Z][a-z]+)/
 		//	    dir = dir.gsub($1+''+$2, $1+' '+$2)
 		//	  end
@@ -46,66 +47,66 @@ public class MovieRater {
 		result = result.replace("480p", "");
 		result = result.replace("720p", "");
 		result = result.replace("ac3", "");
-	  result = result.replace("avi", "");
-	  result = result.replace("bbc", "");
-	  result = result.replace("bbs", "");
-	  result = result.replace("bigfags", "");
-	  result = result.replace("bluray", "");
-	  result = result.replace("blu ray", "");
-	  result = result.replace("brrip", "");
-	  result = result.replace("director cut", "");
-	  result = result.replace("divx", "");
-	  result = result.replace("domino", "");
-	  result = result.replace("drp", "");
-	  result = result.replace("dub", "");
-	  result = result.replace("dvbrip", "");
-	  result = result.replace("dvdscr", "");
-	  result = result.replace("dvdrip", "");
-	  result = result.replace("dvd", "");
-	  result = result.replace("french", "");
-	  result = result.replace("horror", "");
-	  result = result.replace("komedia rom", "");
-	  result = result.replace("koniec", "");
-	  result = result.replace("lektor", "");
-	  result = result.replace("limited", "");
-	  result = result.replace("nappl", "");
-	  result = result.replace("p24", "");
-	  result = result.replace("po polsku", "");
-	  result = result.replace("proper", "");
-	  result = result.replace("super custon", "");
-	  result = result.replace("r5", "");
-	  result = result.replace("readnfo", "");
-	  result = result.replace("rip", "");
-	  result = result.replace("rmvbhunters", "");
-	  result = result.replace("rmvb", "");
-	  result = result.replace("subbed", "");
-	  result = result.replace("thiller", "");
-	  result = result.replace("untouched", "");
-	  result = result.replace("unrated", "");
-	  result = result.replace("x264", "");
-	  result = result.replaceAll("xvid-?.*","");
-	  result = result.replace("-80m", "");
-	  result = result.replace("-alliance", "");
-	  result = result.replace("-axxo", "");
-	  result = result.replace("-bestdivx", "");
-	  result = result.replace("-cinefile", "");
-	  result = result.replace("-diamond", "");
-	  result = result.replace("-done", "");
-	  result = result.replace("-er", "");
-	  result = result.replace("-firma", "");
-	  result = result.replace("-fxg", "");
-	  result = result.replace("-fxm", "");
-	  result = result.replace("-hefty", "");
-	  result = result.replace("-kjs", "");
-	  result = result.replace("-konik", "");
-	  result = result.replace("-ktks", "");
-	  result = result.replace("-m00dy", "");
-	  result = result.replace("-mdx", "");
-	  result = result.replace("-psig", "");
-	  result = result.replace("-ruby", "");
-	  result = result.replace("-vision", "");
-	  result = result.replace("-xan-0", "");
-	  result = result.replace("-", " ");
+		result = result.replace("avi", "");
+		result = result.replace("bbc", "");
+		result = result.replace("bbs", "");
+		result = result.replace("bigfags", "");
+		result = result.replace("bluray", "");
+		result = result.replace("blu ray", "");
+		result = result.replace("brrip", "");
+		result = result.replace("director cut", "");
+		result = result.replace("divx", "");
+		result = result.replace("domino", "");
+		result = result.replace("drp", "");
+		result = result.replace("dub", "");
+		result = result.replace("dvbrip", "");
+		result = result.replace("dvdscr", "");
+		result = result.replace("dvdrip", "");
+		result = result.replace("dvd", "");
+		result = result.replace("french", "");
+		result = result.replace("horror", "");
+		result = result.replace("komedia rom", "");
+		result = result.replace("koniec", "");
+		result = result.replace("lektor", "");
+		result = result.replace("limited", "");
+		result = result.replace("nappl", "");
+		result = result.replace("p24", "");
+		result = result.replace("po polsku", "");
+		result = result.replace("proper", "");
+		result = result.replace("super custon", "");
+		result = result.replace("r5", "");
+		result = result.replace("readnfo", "");
+		result = result.replace("rip", "");
+		result = result.replace("rmvbhunters", "");
+		result = result.replace("rmvb", "");
+		result = result.replace("subbed", "");
+		result = result.replace("thiller", "");
+		result = result.replace("untouched", "");
+		result = result.replace("unrated", "");
+		result = result.replace("x264", "");
+		result = result.replaceAll("xvid-?.*","");
+		result = result.replace("-80m", "");
+		result = result.replace("-alliance", "");
+		result = result.replace("-axxo", "");
+		result = result.replace("-bestdivx", "");
+		result = result.replace("-cinefile", "");
+		result = result.replace("-diamond", "");
+		result = result.replace("-done", "");
+		result = result.replace("-er", "");
+		result = result.replace("-firma", "");
+		result = result.replace("-fxg", "");
+		result = result.replace("-fxm", "");
+		result = result.replace("-hefty", "");
+		result = result.replace("-kjs", "");
+		result = result.replace("-konik", "");
+		result = result.replace("-ktks", "");
+		result = result.replace("-m00dy", "");
+		result = result.replace("-mdx", "");
+		result = result.replace("-psig", "");
+		result = result.replace("-ruby", "");
+		result = result.replace("-vision", "");
+		result = result.replace("-xan-0", "");
+		result = result.replace("-", " ");
 		return result.trim();
 	}
 	
@@ -157,7 +158,7 @@ public class MovieRater {
 		return movies_hash;
 	}
 	
-	public static Item search(Node node, String dir, String category) {
+	private static Item search(Node node, String dir, String category) {
 		if (node instanceof HTMLAnchorElement) {
 			HTMLAnchorElement anchor = (HTMLAnchorElement) node;
 			if (anchor.getClassName().equals("searchResultTitle")) {
@@ -196,7 +197,7 @@ public class MovieRater {
 		return null;
     }
 
-	static Map sortByValue(Map map) {
+	private static Map sortByValue(Map map) {
 		List list = new LinkedList(map.entrySet());
 		Collections.sort(list, new Comparator() {
 			public int compare(Object o1, Object o2) {
@@ -210,13 +211,7 @@ public class MovieRater {
 		}
 		return result;
 	}
-
 	
-	/**
-	 * @param args
-	 * @throws SAXException 
-	 * @throws IOException 
-	 */
 	public static void main(String[] args) throws IOException, SAXException {
 		Map dirs_hash = scanDirs(args[0], args[1]);
 		System.out.println("categories=" + dirs_hash.size());
@@ -230,5 +225,4 @@ public class MovieRater {
 		}
 		System.out.println("Done.");
 	}
-	
 }
