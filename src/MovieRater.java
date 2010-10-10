@@ -1,32 +1,18 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -37,14 +23,10 @@ import org.xml.sax.SAXException;
 
 public class MovieRater {
 
-	private static void readFile() {
-		
-	}
-	
 	private static String extractMovieName(String subdir) {
-//	  while dir =~ /([A-Z][a-z]{2,})([A-Z][a-z]+)/
-//	    dir = dir.gsub($1+''+$2, $1+' '+$2)
-//	  end
+		//	  while dir =~ /([A-Z][a-z]{2,})([A-Z][a-z]+)/
+		//	    dir = dir.gsub($1+''+$2, $1+' '+$2)
+		//	  end
 		String result = subdir.toLowerCase();
 		result = result.replace("r5.line", "");
 		result = result.replace("dd5.1", "");
@@ -127,18 +109,8 @@ public class MovieRater {
 		return result.trim();
 	}
 	
-	private static String remove(String org, String token) {
-		if (org.indexOf(token) >= 0) {
-			StringBuilder sb = new StringBuilder(org);
-			sb.delete(sb.indexOf(token), token.length());
-			return sb.toString();
-		}
-		return org;
-	} 
-	
-	
-	private static Map scanDirs(String args0, String args2) {
-		Map<String, String[]> result = new HashMap();
+	private static Map<String, String[]> scanDirs(String args0, String args2) {
+		Map<String, String[]> result = new HashMap<String, String[]>();
 		
 		File path = new File(args0);
 		List<String> excludes = Arrays.asList(args2.split(","));
@@ -154,15 +126,14 @@ public class MovieRater {
 		return result;
 	}
 	
-	private static Map getMovieRating(Map dirs_hash, String creds) throws IOException, SAXException {
-		Map movies_hash = new HashMap();
-//		login(creds);
+	private static Map<String, Item> getMovieRating(Map<String, String[]> dirs_hash, String creds) throws IOException, SAXException {
+		Map<String, Item> movies_hash = new HashMap<String, Item>();
 		
-		for (Iterator iterator = dirs_hash.keySet().iterator(); iterator.hasNext();) {
-			String category = (String) iterator.next();
+		for (Iterator<String> iterator = dirs_hash.keySet().iterator(); iterator.hasNext();) {
+			String category = iterator.next();
 			System.out.println("======================================> Processing category: "+category);
 			
-			String[] subdirs = (String[]) dirs_hash.get(category);
+			String[] subdirs = dirs_hash.get(category);
 			for (int i = 0; i < subdirs.length; i++) {
 				
 				//  default
@@ -172,97 +143,18 @@ public class MovieRater {
 				System.out.print("Looking for '" + subdir + "'... ");
 				String encoded = URLEncoder.encode(subdir, "UTF-8");
 				
-//				HttpClient client = new HttpClient();
-//				GetMethod method = new GetMethod("http://www.filmweb.pl/search/film?q="+encoded);
-//				
-//				int statusCode = client.executeMethod(method);
-//				
-//				if (statusCode != HttpStatus.SC_OK) {
-//					System.err.println("Method failed: " + method.getStatusLine());
-//				}
-//				BufferedReader in = new BufferedReader(
-//						new InputStreamReader(
-//								method.getResponseBodyAsStream()));
-//				StringBuffer sb = new StringBuffer();
-//				String inputLine;
-//				while ((inputLine = in.readLine()) != null) 
-//					sb.append(inputLine);
-//				in.close();
-//				System.out.println(sb.toString());
-//				method.releaseConnection();
-				
 				
 				DOMParser parser = new DOMParser();
-////			parser.parse(sb.toString());
-			parser.parse("http://www.filmweb.pl/search/film?q="+encoded);
-			Item it = search(parser.getDocument(), subdirs[i], category);
-			if (it!=null)
-				item = it; // found
-			System.out.println(item.toString());
-			movies_hash.put(subdirs[i], item);
+				parser.parse("http://www.filmweb.pl/search/film?q=" + encoded);
+				Item it = search(parser.getDocument(), subdirs[i], category);
+				if (it != null)
+					item = it; // found!
+				System.out.println(item.toString());
+				movies_hash.put(subdirs[i], item);
 			}
 		}
 		
 		return movies_hash;
-	}
-	
-	private static void login(String creds) {
-//		URL url = new URL("https://ssl.filmweb.pl/login");
-//		URLConnection conn = url.openConnection();
-//		BufferedReader in = new BufferedReader(
-//				new InputStreamReader(
-//						conn.getInputStream()));
-//		StringBuffer sb = new StringBuffer();
-//		String inputLine;
-//		while ((inputLine = in.readLine()) != null) 
-//			sb.append(inputLine);
-//		in.close();
-
-//		DOMParser parser = new DOMParser();
-////		parser.parse(sb.toString());
-//		parser.parse("https://ssl.filmweb.pl/login");
-//		print(parser.getDocument(), "");
-		
-		String[] split = creds.split("@");
-		HttpClient client = new HttpClient();
-		PostMethod method = new PostMethod("https://ssl.filmweb.pl/j_login");
-		try {
-		NameValuePair[] data = {
-          new NameValuePair("j_username", split[0]),
-          new NameValuePair("j_password", split[1])
-        };
-        method.setRequestBody(data);
-        
-        int statusCode = client.executeMethod(method);
-
-        if (statusCode != HttpStatus.SC_OK) {
-          System.err.println("Method failed: " + method.getStatusLine());
-        }
-
-        
-        // execute method and handle any error responses.
-//        InputStream in = post.getResponseBodyAsStream();
-        // handle response.
-        		BufferedReader in = new BufferedReader(
-        		new InputStreamReader(
-        				method.getResponseBodyAsStream()));
-        StringBuffer sb = new StringBuffer();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) 
-        	sb.append(inputLine);
-        in.close();
-		System.out.println(sb.toString());
-        
-	} catch (HttpException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} finally {
-	      // Release the connection.
-	      method.releaseConnection();
-	    }
 	}
 	
 	public static Item search(Node node, String dir, String category) {
@@ -270,12 +162,12 @@ public class MovieRater {
 			HTMLAnchorElement anchor = (HTMLAnchorElement) node;
 			if (anchor.getClassName().equals("searchResultTitle")) {
 				Node li = node.getParentNode().getParentNode();
+				// TODO: convert
 //				osoba = li.search("span[text()='[osoba]']")[0]
 //				if (!osoba.nil?) # skip [osoba]
 //				   next
 //				end
 				String title = anchor.getTextContent().trim();
-//				System.out.println("title="+title);	
 				
 				NodeList liChildNodes = li.getChildNodes();
 				for (int i = 0; i < liChildNodes.getLength(); i++) {
@@ -288,20 +180,19 @@ public class MovieRater {
 							Pattern p = Pattern.compile("(ocena: )([0-9]{1}\\.[0-9]{1,2})");
 							Matcher matcher = p.matcher(text);
 							if (matcher.find())
-//								System.out.println("text="+matcher.group(2));
-							return new Item(dir, title, Float.parseFloat(matcher.group(2)), category);
+								return new Item(dir, title, Float.parseFloat(matcher.group(2)), category);
 						}
 					}
 				}
 			}
 		}
-        Node child = node.getFirstChild();
-        while (child != null) {
-            Item item = search(child, dir, category);
-            if (item!=null)
-            	return item;
-            child = child.getNextSibling();
-        }
+		Node child = node.getFirstChild();
+		while (child != null) {
+			Item item = search(child, dir, category);
+			if (item != null)
+				return item;
+			child = child.getNextSibling();
+		}
 		return null;
     }
 
@@ -312,7 +203,6 @@ public class MovieRater {
 				return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
 			}
 		});
-		// logger.info(list);
 		Map result = new LinkedHashMap();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			Map.Entry entry = (Map.Entry)it.next();
@@ -329,7 +219,7 @@ public class MovieRater {
 	 */
 	public static void main(String[] args) throws IOException, SAXException {
 		Map dirs_hash = scanDirs(args[0], args[2]);
-		System.out.println("categories="+dirs_hash.size());
+		System.out.println("categories=" + dirs_hash.size());
 		
 		Map movies_hash = getMovieRating(dirs_hash, args[1]);
 		System.out.println("======================================> Sorting");
@@ -340,6 +230,5 @@ public class MovieRater {
 		}
 		System.out.println("Done.");
 	}
-
 	
 }
