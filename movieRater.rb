@@ -141,8 +141,8 @@ end
 def getMovieRating(dirs_hash)
 
 #  url = 'http://www.filmweb.pl'
-  url = 'http://www.filmweb.pl/login'
-  agent = WWW::Mechanize.new
+  url = 'https://ssl.filmweb.pl/login'
+  agent = Mechanize.new
   page = agent.get(url)
 =begin
   link = page.links.find{ |l| l.text == 'przejdź do Filmweb.pl' }
@@ -219,6 +219,16 @@ puts "======================================> Sorting"
 items_sorted = movies_hash.values.sort
 
   # dump movies to file
+aFile = File.new(ARGV[0]+"\\test.txt", "r+")
+if aFile
+   aFile.syswrite("ABCDEF")
+   aFile.close
+else
+   puts "Unable to open file!"
+end
+
+
+
   # print out results (if specified, narrow to category)
 puts items_sorted
 puts "Done."
