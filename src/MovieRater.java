@@ -24,13 +24,20 @@ import org.xml.sax.SAXException;
 public class MovieRater {
 
 	private static String extractMovieName(String subdir) {
-		// TODO: implement
-		//	  while dir =~ /([A-Z][a-z]{2,})([A-Z][a-z]+)/
-		//	    dir = dir.gsub($1+''+$2, $1+' '+$2)
-		//	  end
-		String result = subdir.toLowerCase();
+		String result = subdir;
+		// /([A-Z][a-z]{2,})([A-Z][a-z]+)/
+		Pattern p = Pattern.compile("([A-Z][a-z]+)([A-Z][a-z]+)");
+		Matcher m =p.matcher(result);
+		while( m.find()) {
+			result = result.replace(m.group(1)+""+m.group(2), m.group(1)+" "+m.group(2));
+			m = p.matcher(result);
+		}
+		
+		result = result.toLowerCase();
+
 		result = result.replace("r5.line", "");
 		result = result.replace("dd5.1", "");
+		result = result.replace("audioksiazki.org", "");
 		result = result.replace(".", " ");
 		result = result.replace("_", " ");
 		result = result.replaceAll("\\[.*\\].*", "");
@@ -67,6 +74,7 @@ public class MovieRater {
 		result = result.replace("horror", "");
 		result = result.replace("komedia rom", "");
 		result = result.replace("koniec", "");
+		result = result.replace("lektorpl", "");
 		result = result.replace("lektor", "");
 		result = result.replace("limited", "");
 		result = result.replace("nappl", "");
@@ -127,7 +135,7 @@ public class MovieRater {
 		return result;
 	}
 	
-	private static Map<String, Item> getMovieRating(Map<String, String[]> dirs_hash, String creds) throws IOException, SAXException {
+	private static Map<String, Item> getMovieRating(Map<String, String[]> dirs_hash) throws IOException, SAXException {
 		Map<String, Item> movies_hash = new HashMap<String, Item>();
 		
 		for (Iterator<String> iterator = dirs_hash.keySet().iterator(); iterator.hasNext();) {
@@ -197,7 +205,7 @@ public class MovieRater {
 		return null;
     }
 
-	private static Map sortByValue(Map map) {
+	private static Map<String, Item> sortByValue(Map<String, Item> map) {
 		List list = new LinkedList(map.entrySet());
 		Collections.sort(list, new Comparator() {
 			public int compare(Object o1, Object o2) {
@@ -213,14 +221,14 @@ public class MovieRater {
 	}
 	
 	public static void main(String[] args) throws IOException, SAXException {
-		Map dirs_hash = scanDirs(args[0], args[1]);
+		Map<String, String[]> dirs_hash = scanDirs(args[0], args[1]);
 		System.out.println("categories=" + dirs_hash.size());
 		
-		Map movies_hash = getMovieRating(dirs_hash, args[1]);
+		Map<String, Item> movies_hash = getMovieRating(dirs_hash);
 		System.out.println("======================================> Sorting");
-		Map items_sorted = sortByValue(movies_hash);
-		for (Iterator iterator = items_sorted.values().iterator(); iterator.hasNext();) {
-			Item item = (Item) iterator.next();
+		Map<String, Item> items_sorted = sortByValue(movies_hash);
+		for (Iterator<Item> iterator = items_sorted.values().iterator(); iterator.hasNext();) {
+			Item item = iterator.next();
 			System.out.println(item.toString());
 		}
 		System.out.println("Done.");
