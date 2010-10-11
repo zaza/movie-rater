@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 
 public class MovieRater {
 
-	private static String extractMovieName(String subdir) {
+	public static String extractMovieName(String subdir) {
 		String result = subdir;
 		// /([A-Z][a-z]{2,})([A-Z][a-z]+)/
 		Pattern p = Pattern.compile("([A-Z][a-z]+)([A-Z][a-z]+)");
@@ -115,6 +115,8 @@ public class MovieRater {
 		result = result.replace("-vision", "");
 		result = result.replace("-xan-0", "");
 		result = result.replace("-", " ");
+		result = result.replace(" the ", "");
+		result = result.replaceAll("\\s{2,}", " ");
 		return result.trim();
 	}
 	
