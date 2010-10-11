@@ -1,7 +1,11 @@
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -120,11 +124,11 @@ public class MovieRater {
 		return result.trim();
 	}
 	
-	private static Map<String, String[]> scanDirs(String args0, String args2) {
+	private static Map<String, String[]> scanDirs(String rootDir, String subDirsToExclude) {
 		Map<String, String[]> result = new HashMap<String, String[]>();
 		
-		File path = new File(args0);
-		List<String> excludes = Arrays.asList(args2.split(","));
+		File path = new File(rootDir);
+		List<String> excludes = Arrays.asList(subDirsToExclude.split(","));
 		if (path.isDirectory()) {
 			String[] list = path.list();
 			for (int i = 0; i < list.length; i++) {
@@ -229,9 +233,19 @@ public class MovieRater {
 		Map<String, Item> movies_hash = getMovieRating(dirs_hash);
 		System.out.println("======================================> Sorting");
 		Map<String, Item> items_sorted = sortByValue(movies_hash);
-		for (Iterator<Item> iterator = items_sorted.values().iterator(); iterator.hasNext();) {
-			Item item = iterator.next();
-			System.out.println(item.toString());
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			Calendar c1 = Calendar.getInstance(); // today
+			BufferedWriter out = new BufferedWriter(new FileWriter(args[0]+"\\"+sdf.format(c1.getTime())+".txt"));
+
+			for (Iterator<Item> it = items_sorted.values().iterator(); it.hasNext();) {
+				Item item = it.next();
+				System.out.println(item.toString());
+				out.write(item.toString());
+			}
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		System.out.println("Done.");
 	}
