@@ -1,5 +1,8 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -141,8 +144,8 @@ public class MovieRater {
 		return result;
 	}
 	
-	private static Map<String, Item> getMovieRating(Map<String, String[]> dirs_hash) throws IOException, SAXException {
-		Map<String, Item> movies_hash = new HashMap<String, Item>();
+	private static Map<String, Item> getMovieRatings(Map<String, String[]> dirs_hash, String cacheFilePath) throws IOException, SAXException {
+		Map<String, Item> movies_hash = readFromFile(cacheFilePath);
 		
 		for (Iterator<String> iterator = dirs_hash.keySet().iterator(); iterator.hasNext();) {
 			String category = iterator.next();
@@ -150,20 +153,24 @@ public class MovieRater {
 			
 			String[] subdirs = dirs_hash.get(category);
 			for (int i = 0; i < subdirs.length; i++) {
-				
 				//  default
 				Item item = new Item(subdirs[i], "", 0.0f, category);
 				
 				String subdir = extractMovieName(subdirs[i]);
 				System.out.print("Looking for '" + subdir + "'... ");
-				String encoded = URLEncoder.encode(subdir, "UTF-8");
 				
-				
-				DOMParser parser = new DOMParser();
-				parser.parse("http://www.filmweb.pl/search/film?q=" + encoded);
-				Item it = search(parser.getDocument(), subdirs[i], category);
-				if (it != null)
-					item = it; // found!
+				if (movies_hash.containsKey(subdirs[i])) {
+					item = movies_hash.get(subdirs[i]);
+					System.out.print("[cache] ");
+				} else {
+					String encoded = URLEncoder.encode(subdir, "UTF-8");
+
+					DOMParser parser = new DOMParser();
+					parser.parse("http://www.filmweb.pl/search/film?q=" + encoded);
+					Item it = search(parser.getDocument(), subdirs[i], category);
+					if (it != null)
+						item = it; // found!
+				}
 				System.out.println(item.toString());
 				movies_hash.put(subdirs[i], item);
 			}
@@ -226,28 +233,53 @@ public class MovieRater {
 		return result;
 	}
 	
+	public static void writeSortedItemsToFile(Map<String, Item> sortedItems, String filePath) throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter(filePath));
+		for (Iterator<Item> it = sortedItems.values().iterator(); it.hasNext();) {
+			Item item = it.next();
+			out.write(item.toString());
+			out.newLine();
+		}
+		out.close();
+	}
+	
+	public static Map<String, Item> readFromFile(String filePath) throws IOException {
+		Map<String, Item> result = new HashMap<String, Item>();
+		FileReader fr = new FileReader(filePath);
+	    BufferedReader br = new BufferedReader(fr);
+	    String s;
+	    while ((s = br.readLine()) != null) {
+	    	Item i = Item.toItem(s);
+	    	if (i.rating > 0)
+	    		result.put(i.dir, i);
+	    }
+	    fr.close();
+	    return result;
+	}
+	
 	public static void main(String[] args) throws IOException, SAXException {
 		Map<String, String[]> dirs_hash = scanDirs(args[0], args[1]);
 		System.out.println("categories=" + dirs_hash.size());
 		
-		Map<String, Item> movies_hash = getMovieRating(dirs_hash);
+		
+		String cacheFilePath = args[0]+"//"+"20101010.txt";
+		Map<String, Item> movies_hash = getMovieRatings(dirs_hash, cacheFilePath);
 		System.out.println("======================================> Sorting");
 		Map<String, Item> items_sorted = sortByValue(movies_hash);
+
+		for (Iterator<Item> it = items_sorted.values().iterator(); it.hasNext();) {
+			Item item = it.next();
+			System.out.println(item.toString());
+		}
+
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			Calendar c1 = Calendar.getInstance(); // today
-			BufferedWriter out = new BufferedWriter(new FileWriter(args[0]+"\\"+sdf.format(c1.getTime())+".txt"));
-
-			for (Iterator<Item> it = items_sorted.values().iterator(); it.hasNext();) {
-				Item item = it.next();
-				System.out.println(item.toString());
-				out.write(item.toString());
-				out.newLine();
-			}
-			out.close();
+			writeSortedItemsToFile(items_sorted, args[0] + "\\"	+ sdf.format(c1.getTime()) + ".txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		System.out.println("Done.");
 	}
 }

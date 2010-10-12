@@ -1,4 +1,7 @@
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.cyberneko.html.parsers.DOMParser;
 import org.xml.sax.SAXException;
@@ -24,21 +27,39 @@ public class MovieRaterTest extends TestCase {
 		parser.parse("test/brothers.html");
 		it = MovieRater.search(parser.getDocument(), "brothers", "test");
 		assertNotNull(it);
-		System.out.println(it.toString());
+		assertEquals("Bracia / Brothers", it.title);
 		
 		parser.parse("test/control.html");
 		it = MovieRater.search(parser.getDocument(), "control", "test");
 		assertNotNull(it);
-		System.out.println(it.toString());
+		assertEquals("Control", it.title);
 		
 		parser.parse("test/droga-bez-powrotu-3.html");
 		it = MovieRater.search(parser.getDocument(), "droga bez powrotu 3", "test");
 		assertNotNull(it);
-		System.out.println(it.toString());
+		assertEquals("Droga bez powrotu 3", it.title);
 	}
 	
 	// couldn't find:
 	// za chwile dalszy ciag programu
 	// the notebook pamietnik > http://www.filmweb.pl/Pamietnik
 	// legacy > http://www.filmweb.pl/film/Dziedzictwo-1978-33474
+	
+	public void testCache() throws IOException {
+		Map map = new HashMap();
+		map.put("A", new Item("A", "a title", 9, "a category"));
+		map.put("B", new Item("B", "b title ", 0.0f, "")); // not found
+		map.put("C", new Item("C", "c title", 7.5f, "c category"));
+		
+		MovieRater.writeSortedItemsToFile(map, "test.txt");
+		
+		Map cachedMap = MovieRater.readFromFile("test.txt");
+		
+		assertNotNull(cachedMap.get("A"));
+		assertNull(cachedMap.get("B"));
+		assertNotNull(cachedMap.get("C"));
+		assertNull(cachedMap.get("D"));
+		
+		new File("test.txt").delete();
+	}
 }

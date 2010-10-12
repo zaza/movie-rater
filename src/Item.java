@@ -1,4 +1,4 @@
-public class Item implements Comparable<Item>{
+public class Item implements Comparable<Item> {
 	String dir;
 	String title;
 	float rating;
@@ -13,15 +13,22 @@ public class Item implements Comparable<Item>{
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return rating + "\t" + category + "\t" + dir + " -> " + title;
 	}
 
 	@Override
 	public int compareTo(Item o) {
-		if (rating > o.rating) return -1;
-		if (rating < o.rating) return 1;
+		if (rating > o.rating)
+			return -1;
+		if (rating < o.rating)
+			return 1;
 		return 0;
 	}
 
+	public static Item toItem(String s) {
+		String[] split1 = s.split(" -> ");
+		String[] split2 = split1[0].split("\t");
+		return new Item(split2[2], split1.length == 2 ? split1[1] : "", Float
+				.parseFloat(split2[0]), split2[1]);
+	}
 }
