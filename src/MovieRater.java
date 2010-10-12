@@ -47,7 +47,7 @@ public class MovieRater {
 		result = result.replaceAll("\\[.*\\].*", "");
 		result = result.replaceAll("\\{.*\\}.*", "");
 		result = result.replaceAll("\\(.*\\).*", "");
-		result = result.replaceAll("19|20[0-9]{2}", "");
+		result = result.replaceAll("(19|20)[0-9]{2}", "");
 		result = result.replaceAll("[0-9]+-[0-9]+", "");
 		result = result.replaceAll(" pl( |$)", "");
 		result = result.replace(" 3d", "");
@@ -119,7 +119,7 @@ public class MovieRater {
 		result = result.replace("-vision", "");
 		result = result.replace("-xan-0", "");
 		result = result.replace("-", " ");
-		result = result.replace(" the ", "");
+		result = result.replace("the ", " ");
 		result = result.replaceAll("\\s{2,}", " ");
 		return result.trim();
 	}
