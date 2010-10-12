@@ -172,7 +172,7 @@ public class MovieRater {
 		return movies_hash;
 	}
 	
-	private static Item search(Node node, String dir, String category) {
+	public static Item search(Node node, String dir, String category) {
 		if (node instanceof HTMLAnchorElement) {
 			HTMLAnchorElement anchor = (HTMLAnchorElement) node;
 			if (anchor.getClassName().equals("searchResultTitle")) {
@@ -242,6 +242,7 @@ public class MovieRater {
 				Item item = it.next();
 				System.out.println(item.toString());
 				out.write(item.toString());
+				out.newLine();
 			}
 			out.close();
 		} catch (IOException e) {
