@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -127,7 +128,7 @@ public class MovieRater {
 		return result.trim();
 	}
 	
-	private static Map<String, String[]> scanDirs(String rootDir, String subDirsToExclude) {
+	public static Map<String, String[]> scanDirs(String rootDir, String subDirsToExclude) {
 		Map<String, String[]> result = new HashMap<String, String[]>();
 		
 		File path = new File(rootDir);
@@ -144,8 +145,9 @@ public class MovieRater {
 		return result;
 	}
 	
-	private static Map<String, Item> getMovieRatings(Map<String, String[]> dirs_hash, String cacheFilePath) throws IOException, SAXException {
-		Map<String, Item> movies_hash = readFromFile(cacheFilePath);
+	public static Map<String, Item> getMovieRatings(Map<String, String[]> dirs_hash, Map<String, Item> movies_cache) throws IOException, SAXException {
+		
+		Map<String, Item> movies_hash = new HashMap<String, Item>();
 		
 		for (Iterator<String> iterator = dirs_hash.keySet().iterator(); iterator.hasNext();) {
 			String category = iterator.next();
@@ -159,8 +161,8 @@ public class MovieRater {
 				String subdir = extractMovieName(subdirs[i]);
 				System.out.print("Looking for '" + subdir + "'... ");
 				
-				if (movies_hash.containsKey(subdirs[i])) {
-					item = movies_hash.get(subdirs[i]);
+				if (movies_cache.containsKey(subdirs[i])) {
+					item = movies_cache.get(subdirs[i]);
 					System.out.print("[cache] ");
 				} else {
 					String encoded = URLEncoder.encode(subdir, "UTF-8");
@@ -243,8 +245,13 @@ public class MovieRater {
 		out.close();
 	}
 	
-	public static Map<String, Item> readFromFile(String filePath) throws IOException {
+	public static Map<String, Item> readCache(String root) throws IOException {
+		String filePath = findLatestCacheFile(root);
 		Map<String, Item> result = new HashMap<String, Item>();
+		File file = new File(filePath);
+		if (!file.exists() || file.isDirectory())
+			return result;
+		System.out.println("Found cache file:" + filePath);
 		FileReader fr = new FileReader(filePath);
 	    BufferedReader br = new BufferedReader(fr);
 	    String s;
@@ -257,13 +264,28 @@ public class MovieRater {
 	    return result;
 	}
 	
+	public static String findLatestCacheFile(String root) {
+		File rootFile = new File(root);
+		if (rootFile.isDirectory()) {
+			String[] list = rootFile.list();
+			if (list.length > 0) {
+				String latest = "";
+				for (int i = 0; i < list.length; i++) {
+					if (list[i].endsWith(".txt") && list[i].compareTo(latest) > 0)
+						latest = list[i];
+				}
+				return root + "/" + latest;
+			}
+		}
+		return root + "//" + "test.txt";
+	}
+	
 	public static void main(String[] args) throws IOException, SAXException {
 		Map<String, String[]> dirs_hash = scanDirs(args[0], args[1]);
 		System.out.println("categories=" + dirs_hash.size());
 		
-		
-		String cacheFilePath = args[0]+"//"+"20101010.txt";
-		Map<String, Item> movies_hash = getMovieRatings(dirs_hash, cacheFilePath);
+		Map<String, Item> movies_cache = readCache(args[0]);
+		Map<String, Item> movies_hash = getMovieRatings(dirs_hash, movies_cache);
 		System.out.println("======================================> Sorting");
 		Map<String, Item> items_sorted = sortByValue(movies_hash);
 
