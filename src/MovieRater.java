@@ -27,7 +27,6 @@ import org.w3c.dom.html.HTMLAnchorElement;
 import org.w3c.dom.html.HTMLDivElement;
 import org.xml.sax.SAXException;
 
-
 public class MovieRater {
 
 	public static String extractMovieName(String subdir) {
@@ -190,7 +189,7 @@ public class MovieRater {
 			if (item.title.equalsIgnoreCase(dir)) { // perfect match!
 				return item;
 			}
-			// polish / english
+			// Polish / English
 			String[] split = item.title.split("/");
 			for (int i = 0; i < split.length; i++) {
 				if (split[i].trim().equalsIgnoreCase(dir)) { // perfect match!
@@ -212,7 +211,7 @@ public class MovieRater {
 			HTMLAnchorElement anchor = (HTMLAnchorElement) node;
 			if (anchor.getClassName().equals("searchResultTitle")) {
 				Node li = node.getParentNode().getParentNode();
-				// TODO: convert
+				// TODO: convert to java
 //				osoba = li.search("span[text()='[osoba]']")[0]
 //				if (!osoba.nil?) # skip [osoba]
 //				   next
@@ -238,24 +237,21 @@ public class MovieRater {
 		}
 		Node child = node.getFirstChild();
 		while (child != null) {
-			/*Item item = */search(child, dir, category, results);
-//			if (item != null)
-//				return item;
+			search(child, dir, category, results);
 			child = child.getNextSibling();
 		}
-//		return null;
     }
 
 	private static Map<String, Item> sortByValue(Map<String, Item> map) {
-		List list = new LinkedList(map.entrySet());
-		Collections.sort(list, new Comparator() {
+		List<Item> list = new LinkedList(map.entrySet());
+		Collections.sort(list, new Comparator<Object>() {
 			public int compare(Object o1, Object o2) {
 				return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
 			}
 		});
-		Map result = new LinkedHashMap();
+		Map<String, Item> result = new LinkedHashMap<String, Item>();
 		for (Iterator it = list.iterator(); it.hasNext();) {
-			Map.Entry entry = (Map.Entry)it.next();
+			Map.Entry<String, Item> entry = (Map.Entry)it.next();
 			result.put(entry.getKey(), entry.getValue());
 		}
 		return result;

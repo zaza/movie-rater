@@ -1,16 +1,13 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cyberneko.html.parsers.DOMParser;
-import org.xml.sax.SAXException;
-
 import junit.framework.TestCase;
+
+import org.xml.sax.SAXException;
 
 public class MovieRaterTest extends TestCase {
 	public void testExtractMovieName() {
@@ -39,7 +36,7 @@ public class MovieRaterTest extends TestCase {
 	public void testCacheWriteRead() throws IOException {
 		Map<String, String[]> dirs = MovieRater.scanDirs("test/data", "results");
 		String[] subdirs = dirs.get("category");
-		Map map = new HashMap();
+		Map<String, Item> map = new HashMap<String, Item>();
 		map.put(subdirs[0], new Item(subdirs[0], "a title", 9, "category"));
 		map.put(subdirs[1], new Item(subdirs[1], "b title ", 8.3f, "category"));
 		map.put(subdirs[2], new Item(subdirs[2], "c title", 7.5f, "category"));
@@ -48,7 +45,7 @@ public class MovieRaterTest extends TestCase {
 		
 		MovieRater.writeSortedItemsToFile(map /*not sorted*/, "test/data/test.txt");
 		
-		Map cachedMap = MovieRater.readCache("test/data/");
+		Map<String, Item> cachedMap = MovieRater.readCache("test/data/");
 		
 		assertEquals(4, cachedMap.size());
 		assertNotNull(cachedMap.get("GĘŚLĄ JAŹŃ"));
@@ -66,7 +63,7 @@ public class MovieRaterTest extends TestCase {
 	public void testDontSaveNonExisting() throws IOException, SAXException {
 		Map<String, String[]> dirs = MovieRater.scanDirs("test/data", "results");
 		String[] subdirs = dirs.get("category");
-		Map map = new HashMap();
+		Map<String, Item> map = new HashMap<String, Item>();
 		map.put(subdirs[0], new Item(subdirs[0], "a title", 9, "category"));
 		map.put(subdirs[1], new Item(subdirs[1], "b title ", 8.3f, "category"));
 		map.put(subdirs[2], new Item(subdirs[2], "c title", 7.5f, "category"));
