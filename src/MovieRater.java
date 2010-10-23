@@ -1,13 +1,12 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -37,7 +36,8 @@ public class MovieRater {
 		Pattern p = Pattern.compile("([A-Z][a-z]+)([A-Z][a-z]+)");
 		Matcher m =p.matcher(result);
 		while( m.find()) {
-			result = result.replace(m.group(1)+""+m.group(2), m.group(1)+" "+m.group(2));
+			result = result.replace(m.group(1) + "" + m.group(2), m.group(1)
+					+ " " + m.group(2));
 			m = p.matcher(result);
 		}
 		
@@ -136,7 +136,7 @@ public class MovieRater {
 		if (path.isDirectory()) {
 			String[] list = path.list();
 			for (int i = 0; i < list.length; i++) {
-				File subdir = new File(path.getAbsolutePath()+"\\"+list[i]);
+				File subdir = new File(path.getAbsolutePath() + "\\" + list[i]);
 				if (subdir.isDirectory() && !excludes.contains(list[i])) {
 					result.put(list[i], subdir.list());
 				}
@@ -169,7 +169,9 @@ public class MovieRater {
 
 					DOMParser parser = new DOMParser();
 					parser.parse("http://www.filmweb.pl/search/film?q=" + encoded);
-					Item it = search(parser.getDocument(), subdirs[i], category);
+					List<Item> results = new ArrayList<Item>();
+					search(parser.getDocument(), subdirs[i], category, results);
+					Item it = findBestMatch(subdirs[i], results);
 					if (it != null)
 						item = it; // found!
 				}
@@ -181,7 +183,31 @@ public class MovieRater {
 		return movies_hash;
 	}
 	
-	public static Item search(Node node, String dir, String category) {
+	public static Item findBestMatch(String dir, List<Item> results) {
+		Item bestMatch = results.get(0);
+		for (Iterator<Item> iterator = results.iterator(); iterator.hasNext();) {
+			Item item = iterator.next();
+			if (item.title.equalsIgnoreCase(dir)) { // perfect match!
+				return item;
+			}
+			// polish / english
+			String[] split = item.title.split("/");
+			for (int i = 0; i < split.length; i++) {
+				if (split[i].trim().equalsIgnoreCase(dir)) { // perfect match!
+					return item;
+				}
+				// title : subtitle
+				if (split[i].indexOf(":") > 0) {
+					if (split[i].substring(0, split[i].indexOf(":"))
+							.equalsIgnoreCase(dir))
+						return item;
+				}
+			}
+		}
+		return bestMatch;
+	}
+	
+	public static void search(Node node, String dir, String category, List<Item> results) {
 		if (node instanceof HTMLAnchorElement) {
 			HTMLAnchorElement anchor = (HTMLAnchorElement) node;
 			if (anchor.getClassName().equals("searchResultTitle")) {
@@ -204,7 +230,7 @@ public class MovieRater {
 							Pattern p = Pattern.compile("(ocena: )([0-9]{1}\\.[0-9]{1,2})");
 							Matcher matcher = p.matcher(text);
 							if (matcher.find())
-								return new Item(dir, title, Float.parseFloat(matcher.group(2)), category);
+								results.add(new Item(dir, title, Float.parseFloat(matcher.group(2)), category));
 						}
 					}
 				}
@@ -212,12 +238,12 @@ public class MovieRater {
 		}
 		Node child = node.getFirstChild();
 		while (child != null) {
-			Item item = search(child, dir, category);
-			if (item != null)
-				return item;
+			/*Item item = */search(child, dir, category, results);
+//			if (item != null)
+//				return item;
 			child = child.getNextSibling();
 		}
-		return null;
+//		return null;
     }
 
 	private static Map<String, Item> sortByValue(Map<String, Item> map) {

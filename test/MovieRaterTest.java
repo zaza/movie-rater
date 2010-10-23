@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,47 +23,6 @@ public class MovieRaterTest extends TestCase {
 		assertEquals("futurama into wild green yonder", MovieRater.extractMovieName("Futurama.Into.The.Wild.Green.Yonder.2009.PROPER.DVDRiP.XViD-UNTOUCHED"));
 		assertEquals("after sunset", MovieRater.extractMovieName("After.the.Sunset.DVDrip.XviD-KJS"));
 	}
-	
-	public void testItemSearch() throws SAXException, IOException {
-		DOMParser parser = new DOMParser();
-		Item it = null;
-
-		parser.parse("test/data/results/brothers.html");
-		it = MovieRater.search(parser.getDocument(), "brothers", "test");
-		assertNotNull(it);
-		assertEquals("Bracia / Brothers", it.title);
-
-		parser.parse("test/data/results/watchmen-motion-comics.html");
-		it = MovieRater.search(parser.getDocument(), "watchmen motion comics", "test");
-		assertNotNull(it);
-		assertEquals("Watchmen", it.title);
-
-		parser.parse("test/data/results/cash.html");
-		it = MovieRater.search(parser.getDocument(), "cash", "test");
-		assertNotNull(it);
-		assertEquals("Cash", it.title);
-		
-		parser.parse("test/data/results/control.html");
-		it = MovieRater.search(parser.getDocument(), "control", "test");
-		assertNotNull(it);
-		assertEquals("Control", it.title);
-		
-		parser.parse("test/data/results/droga-bez-powrotu-3.html");
-		it = MovieRater.search(parser.getDocument(), "droga bez powrotu 3", "test");
-		assertNotNull(it);
-		assertEquals("Droga bez powrotu 3", it.title);
-	}
-	
-	// couldn't find:
-	// za chwile dalszy ciag programu
-	// the notebook pamietnik > http://www.filmweb.pl/Pamietnik
-	// legacy > http://www.filmweb.pl/film/Dziedzictwo-1978-33474
-	// wsciekłe pięści węża
-	// happy tree friends christmas special
-	
-	// wrong match:
-	// 'snl'... 7.75	comedy	SNL{@dvd} -> SNL Fanatic
-	// Looking for 'room 6'... 7.38	horror	Room 6 -> Azyl / 	Panic Room
 	
 	public void testScanDirs() {
 		Map<String, String[]> dirs = MovieRater.scanDirs("test/data", "results");
