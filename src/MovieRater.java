@@ -20,12 +20,25 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.html.HTMLAnchorElement;
 import org.w3c.dom.html.HTMLDivElement;
 import org.xml.sax.SAXException;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlButton;
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.html.HtmlListItem;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
 public class MovieRater {
 
@@ -85,6 +98,7 @@ public class MovieRater {
 		result = result.replace("lektor", "");
 		result = result.replace("limited", "");
 		result = result.replace("nappl", "");
+		result = result.replace("napisy", "");
 		result = result.replace("p24", "");
 		result = result.replace("po polsku", "");
 		result = result.replace("proper", "");
@@ -165,11 +179,69 @@ public class MovieRater {
 					System.out.print("[cache] ");
 				} else {
 					String encoded = URLEncoder.encode(subdir, "UTF-8");
+					
+//					HttpUnitOptions.setScriptingEnabled(false);
+//					HttpUnitOptions.setExceptionsThrownOnScriptError(false);
 
-					DOMParser parser = new DOMParser();
-					parser.parse("http://www.filmweb.pl/search/film?q=" + encoded);
+//					WebConversation wc = new WebConversation();
+//					WebResponse   resp = wc.getResponse( "http://www.filmweb.pl/search/film?q=" + encoded);
+//					System.out.println(resp.getText());
+//					WebLink link = resp.getLinkWith("Przejdź do Filmwebu");
+//					if (link != null) {
+////						link.click();
+//					System.out.println("================ wait! ===========");
+//					try {
+//						Thread.sleep(17*1000);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//						resp   = wc.getCurrentPage();
+//						System.out.println(resp.getText());
+//					}
+//					Document document = resp.getDOM();
+					
+					
+					   final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
+					   //.setsetCssErrorHandler
+					   webClient.setThrowExceptionOnScriptError(false);
+					   webClient.setJavaScriptEnabled(false);
+
+//					    HtmlPage page = webClient.getPage("http://www.filmweb.pl/search/film?q=" + encoded);
+					   HtmlPage page = webClient.getPage("http://www.filmweb.pl");
+					   
+//					    System.out.println( page.asXml());
+					    HtmlAnchor link = null;
+					    try {
+//					     link = page.getAnchorByHref("http://www.filmweb.pl/search/film?q=" + encoded);
+					    	link = page.getAnchorByHref("http://www.filmweb.pl");
+					    } catch (ElementNotFoundException e) {
+					    	
+					    }
+					    if (link != null) {
+					    	System.err.println("================need to click");
+					    	page = link.click();
+					    	System.out.println("================ clcik! ===========");
+					    }
+//					    System.out.println( page.asText());
+//
+//					  final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
+//					  HtmlPage page = webClient.getPage("http://www.filmweb.pl/");
+					  HtmlForm searchForm = page.getForms().get(0);
+//					  searchForm.setTextContent(subdir);
+					  searchForm.getInputByName("q").setValueAttribute(subdir);
+//					  page = (HtmlPage) searchForm.getInputByValue("Sign In").click();
+
+					  HtmlSubmitInput submit = (HtmlSubmitInput) searchForm.getByXPath("//input").get(1);
+					  page = submit.click();
+//					  System.out.println("search="+ page.asText());
+					
+//					DOMParser parser = new DOMParser();
+//					parser.parse("http://www.filmweb.pl/search/film?q=" + encoded);
 					List<Item> results = new ArrayList<Item>();
-					search(parser.getDocument(), subdirs[i], category, results);
+//					search(parser.getDocument(), subdirs[i], category, results);
+//					search(document, subdirs[i], category, results);
+					search(page, subdirs[i], category, results);
 					Item it = findBestMatch(subdirs[i], results);
 					if (it != null)
 						item = it; // found!
@@ -206,11 +278,19 @@ public class MovieRater {
 		return bestMatch;
 	}
 	
-	public static void search(Node node, String dir, String category, List<Item> results) {
-		if (node instanceof HTMLAnchorElement) {
-			HTMLAnchorElement anchor = (HTMLAnchorElement) node;
-			if (anchor.getClassName().equals("searchResultTitle")) {
-				Node li = node.getParentNode().getParentNode();
+	public static void search(HtmlPage page, String dir, String category, List<Item> results) {
+		HtmlElement ul = page.getElementById("searchFixCheck");
+		Iterable<HtmlElement> lis = ul.getChildElements();
+		for (Iterator<HtmlElement> iterator = lis.iterator(); iterator.hasNext();) {
+			HtmlElement n = iterator.next();
+			
+		if (n instanceof HtmlListItem) {
+			HtmlListItem listItem = (HtmlListItem) n;
+			Object node = listItem.getByXPath("//a[@class='searchResultTitle']").get(0);
+		
+		if (node instanceof HtmlAnchor) {
+			HtmlAnchor anchor = (HtmlAnchor) node;
+				Node li = anchor.getParentNode().getParentNode();
 				// TODO: convert to java
 //				osoba = li.search("span[text()='[osoba]']")[0]
 //				if (!osoba.nil?) # skip [osoba]
@@ -218,27 +298,26 @@ public class MovieRater {
 //				end
 				String title = anchor.getTextContent().trim();
 				
-				NodeList liChildNodes = li.getChildNodes();
-				for (int i = 0; i < liChildNodes.getLength(); i++) {
-					Node liChild = liChildNodes.item(i);
-					if (liChild instanceof HTMLDivElement ) {
-						HTMLDivElement  div = (HTMLDivElement) liChild;
-						if (div.getClassName().equals("searchResultRating")) {
+				List<?> searchResultRatings = listItem.getByXPath("//div[@class='searchResultRating']");
+				for (Iterator iterator2 = searchResultRatings.iterator(); iterator2
+						.hasNext();) {
+					Object object = (Object) iterator2.next();
+					
+//					Node liChild = liChildNodes.item(i);
+					if (object instanceof HtmlDivision ) {
+						HtmlDivision  div = (HtmlDivision) object;
+//						if (div.getClassName().equals("searchResultRating")) {
 							Node span = div.getChildNodes().item(1);
 							String text = span.getTextContent();
 							Pattern p = Pattern.compile("(ocena: )([0-9]{1}\\.[0-9]{1,2})");
 							Matcher matcher = p.matcher(text);
 							if (matcher.find())
 								results.add(new Item(dir, title, Float.parseFloat(matcher.group(2)), category));
-						}
+//						}
 					}
-				}
 			}
 		}
-		Node child = node.getFirstChild();
-		while (child != null) {
-			search(child, dir, category, results);
-			child = child.getNextSibling();
+		}
 		}
     }
 
