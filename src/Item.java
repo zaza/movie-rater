@@ -16,7 +16,6 @@ public class Item implements Comparable<Item> {
 		return rating + "\t" + category + "\t" + dir + " -> " + title;
 	}
 
-	@Override
 	public int compareTo(Item o) {
 		if (rating > o.rating)
 			return -1;
