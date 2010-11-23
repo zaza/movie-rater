@@ -176,17 +176,14 @@ public class MovieRater {
 					webClient.setJavaScriptEnabled(false);
 
 					HtmlPage page = webClient.getPage("http://www.filmweb.pl");
-
 					HtmlAnchor link = null;
 					try {
 						link = page.getAnchorByHref("http://www.filmweb.pl");
 					} catch (ElementNotFoundException e) {
-
+						// ignore
 					}
 					if (link != null) {
-						System.err.println("================need to click");
 						page = link.click();
-						System.out.println("================ clcik! ===========");
 					}
 					HtmlForm searchForm = page.getForms().get(0);
 					searchForm.getInputByName("q").setValueAttribute(subdir);
@@ -208,6 +205,9 @@ public class MovieRater {
 	}
 
 	public static Item findBestMatch(String dir, List<Item> results) {
+		// TODO:
+		if (results.isEmpty())
+			return null;
 		Item bestMatch = results.get(0);
 		for (Iterator<Item> iterator = results.iterator(); iterator.hasNext();) {
 			Item item = iterator.next();
@@ -233,6 +233,9 @@ public class MovieRater {
 
 	public static void search(HtmlPage page, String dir, String category, List<Item> results) {
 		HtmlElement ul = page.getElementById("searchFixCheck");
+		// TODO:
+		if (ul == null) 
+			return;
 		Iterable<HtmlElement> lis = ul.getChildElements();
 		for (Iterator<HtmlElement> it = lis.iterator(); it.hasNext();) {
 			HtmlElement n = it.next();
