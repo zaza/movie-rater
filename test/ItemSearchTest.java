@@ -5,7 +5,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.cyberneko.html.parsers.DOMParser;
 import org.xml.sax.SAXException;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -14,14 +13,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ItemSearchTest extends TestCase {
 
-	DOMParser parser;
 	List<Item> results;
 	WebClient webClient;
 	String workdir;
 
 	@Override
 	protected void setUp() throws Exception {
-		parser = new DOMParser();
 		results = new ArrayList<Item>();
 		webClient = new WebClient(BrowserVersion.FIREFOX_3);
 		webClient.setThrowExceptionOnScriptError(false);

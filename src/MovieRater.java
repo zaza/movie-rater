@@ -234,34 +234,34 @@ public class MovieRater {
 	public static void search(HtmlPage page, String dir, String category, List<Item> results) {
 		HtmlElement ul = page.getElementById("searchFixCheck");
 		Iterable<HtmlElement> lis = ul.getChildElements();
-		for (Iterator<HtmlElement> iterator = lis.iterator(); iterator.hasNext();) {
-			HtmlElement n = iterator.next();
-
+		for (Iterator<HtmlElement> it = lis.iterator(); it.hasNext();) {
+			HtmlElement n = it.next();
 			if (n instanceof HtmlListItem) {
 				HtmlListItem listItem = (HtmlListItem) n;
-				Object node = listItem.getByXPath("//a[@class='searchResultTitle']").get(0);
-
-				if (node instanceof HtmlAnchor) {
-					HtmlAnchor anchor = (HtmlAnchor) node;
-					Node li = anchor.getParentNode().getParentNode();
-					// TODO: convert to java
-					// osoba = li.search("span[text()='[osoba]']")[0]
-					// if (!osoba.nil?) # skip [osoba]
-					// next
-					// end
-					String title = anchor.getTextContent().trim();
-
-					List<?> searchResultRatings = listItem.getByXPath("//div[@class='searchResultRating']");
-					for (Iterator it2 = searchResultRatings.iterator(); it2.hasNext();) {
-						Object object = (Object) it2.next();
-						if (object instanceof HtmlDivision ) {
-							HtmlDivision  div = (HtmlDivision) object;
-							Node span = div.getChildNodes().item(1);
-							String text = span.getTextContent();
-							Pattern p = Pattern.compile("(ocena: )([0-9]{1}\\.[0-9]{1,2})");
-							Matcher matcher = p.matcher(text);
-							if (matcher.find())
-								results.add(new Item(dir, title, Float.parseFloat(matcher.group(2)), category));
+				List<?> as = listItem.getByXPath("//a[@class='searchResultTitle']");
+				for (Iterator it2 = as.iterator(); it2.hasNext();) {
+					Object a = (Object) it2.next();
+					if (a instanceof HtmlAnchor) {
+						HtmlAnchor anchor = (HtmlAnchor) a;
+						Node li = anchor.getParentNode().getParentNode();
+						// TODO: convert to java
+						// osoba = li.search("span[text()='[osoba]']")[0]
+						// if (!osoba.nil?) # skip [osoba]
+						// next
+						// end
+						String title = anchor.getTextContent().trim();
+						List<?> searchResultRatings = listItem.getByXPath("//div[@class='searchResultRating']");
+						for (Iterator it3 = searchResultRatings.iterator(); it3.hasNext();) {
+							Object object = (Object) it3.next();
+							if (object instanceof HtmlDivision ) {
+								HtmlDivision  div = (HtmlDivision) object;
+								Node span = div.getChildNodes().item(1);
+								String text = span.getTextContent();
+								Pattern p = Pattern.compile("(ocena: )([0-9]{1}\\.[0-9]{1,2})");
+								Matcher matcher = p.matcher(text);
+								if (matcher.find())
+									results.add(new Item(dir, title, Float.parseFloat(matcher.group(2)), category));
+							}
 						}
 					}
 				}
