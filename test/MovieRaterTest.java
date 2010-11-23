@@ -19,6 +19,7 @@ public class MovieRaterTest extends TestCase {
 		
 		assertEquals("futurama into wild green yonder", MovieRater.extractMovieName("Futurama.Into.The.Wild.Green.Yonder.2009.PROPER.DVDRiP.XViD-UNTOUCHED"));
 		assertEquals("after sunset", MovieRater.extractMovieName("After.the.Sunset.DVDrip.XviD-KJS"));
+		assertEquals("centurion", MovieRater.extractMovieName("Centurion.480p.BRRip.Napisy.PL"));
 	}
 	
 	public void testScanDirs() {
