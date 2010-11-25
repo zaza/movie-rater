@@ -108,16 +108,13 @@ public class ItemSearchTest extends TestCase {
 		assertEquals("Bogowie muszą być szaleni / Gods Must Be Crazy, The",
 				it.title);
 	}
-
-	// TODO:
-	// couldn't find:
-	// wsciekłe pięści węża >
-	// http://www.filmweb.pl/film/W%C5%9Bciek%C5%82e+pi%C4%99%C5%9Bci+W%C4%99%C5%BCa-2006-311861
-	// the notebook pamietnik > http://www.filmweb.pl/Pamietnik
-	// za chwile dalszy ciag programu
-	// legacy > http://www.filmweb.pl/film/Dziedzictwo-1978-33474
-	// happy tree friends christmas special
-
-	// wrong match:
-	// 'snl'... 7.75 comedy SNL{@dvd} -> SNL Fanatic
+	
+	public void testWscieklePiesciWeza() throws SAXException, IOException {
+		HtmlPage page = webClient.getPage("file:/" + workdir
+				+ "/test/data/results/wsciekle-piesci-weza.html");
+		MovieRater.search(page, "wsciekłe pięści węża", "test", results);
+		Item it = MovieRater.findBestMatch("gods must be crazy", results);
+		assertNotNull(it);
+		assertEquals("Wściekłe pięści Węża", it.title);
+	}
 }

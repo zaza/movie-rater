@@ -53,7 +53,7 @@ public class MovieRater {
 		result = result.replace("audioksiazki.org", "");
 		result = result.replace(".", " ");
 		result = result.replace("_", " ");
-		result = result.replaceAll("\\[.*\\].*", "");
+		result = result.replaceAll("\\[.*\\]", "");
 		result = result.replaceAll("\\{.*\\}.*", "");
 		result = result.replaceAll("\\(.*\\).*", "");
 		result = result.replaceAll("(19|20)[0-9]{2}", "");
@@ -91,6 +91,7 @@ public class MovieRater {
 		result = result.replace("lektor", "");
 		result = result.replace("limited", "");
 		result = result.replace("nappl", "");
+		result = result.replace("wtopione napisy", "");
 		result = result.replace("napisy", "");
 		result = result.replace("p24", "");
 		result = result.replace("po polsku", "");

@@ -20,6 +20,9 @@ public class MovieRaterTest extends TestCase {
 		assertEquals("futurama into wild green yonder", MovieRater.extractMovieName("Futurama.Into.The.Wild.Green.Yonder.2009.PROPER.DVDRiP.XViD-UNTOUCHED"));
 		assertEquals("after sunset", MovieRater.extractMovieName("After.the.Sunset.DVDrip.XviD-KJS"));
 		assertEquals("centurion", MovieRater.extractMovieName("Centurion.480p.BRRip.Napisy.PL"));
+		assertEquals("wybuchowa para", MovieRater.extractMovieName("Wybuchowa Para WTOPiONE NAPiSY PL")); 
+		assertEquals("nausicaä z doliny wiatru", MovieRater.extractMovieName("1984 [eng]_ Nausicaä z Doliny Wiatru (Kaze no tani no Naushika)"));
+		assertEquals("ksiaze persi piaski czasu", MovieRater.extractMovieName("ksiaze persi piaski czasu(2010) DVDRip"));
 	}
 	
 	public void testScanDirs() {
