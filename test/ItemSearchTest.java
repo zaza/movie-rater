@@ -117,4 +117,13 @@ public class ItemSearchTest extends TestCase {
 		assertNotNull(it);
 		assertEquals("Wściekłe pięści Węża", it.title);
 	}
+
+	public void testKsiazePersiPiaskiCzasu() throws SAXException, IOException {
+		HtmlPage page = webClient.getPage("file:/" + workdir
+				+ "/test/data/results/ksiaze-persi-piaski-czasu.html");
+		MovieRater.search(page, "ksiaze persi piaski czasu", "test", results);
+		Item it = MovieRater.findBestMatch("ksiaze persi piaski czasu", results);
+		assertNotNull(it);
+		assertEquals("Książę Persji: Piaski Czasu / Prince of Persia: The Sands of Time", it.title);
+	}
 }
