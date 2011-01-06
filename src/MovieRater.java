@@ -129,6 +129,7 @@ public class MovieRater {
 		result = result.replace("-ruby", "");
 		result = result.replace("-vision", "");
 		result = result.replace("-xan-0", "");
+		result = result.replace("klaxxon", "");
 		result = result.replace("-", " ");
 		result = result.replace("the ", " ");
 		result = result.replaceAll("\\s{2,}", " ");
