@@ -120,10 +120,19 @@ public class ItemSearchTest extends TestCase {
 
 	public void testKsiazePersiPiaskiCzasu() throws SAXException, IOException {
 		HtmlPage page = webClient.getPage("file:/" + workdir
-				+ "/test/data/results/ksiaze-persi-piaski-czasu.html");
-		MovieRater.search(page, "ksiaze persi piaski czasu", "test", results);
-		Item it = MovieRater.findBestMatch("ksiaze persi piaski czasu", results);
+				+ "/test/data/results/ksiaze-persji-piaski-czasu.html");
+		MovieRater.search(page, "ksiaze persji piaski czasu", "test", results);
+		Item it = MovieRater.findBestMatch("ksiaze persji piaski czasu", results);
 		assertNotNull(it);
 		assertEquals("Książę Persji: Piaski Czasu / Prince of Persia: The Sands of Time", it.title);
+	}
+	
+	public void testLifeOfBrian() throws SAXException, IOException {
+		HtmlPage page = webClient.getPage("file:/" + workdir
+				+ "/test/data/results/life-of-brian.html");
+		MovieRater.search(page, "life of brian", "test", results);
+		Item it = MovieRater.findBestMatch("life of brian", results);
+		assertNotNull(it);
+		assertEquals("Żywot Briana / Life of Brian", it.title);
 	}
 }

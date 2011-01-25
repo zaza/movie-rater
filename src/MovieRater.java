@@ -260,7 +260,7 @@ public class MovieRater {
 							Object object = (Object) it3.next();
 							if (object instanceof HtmlDivision ) {
 								HtmlDivision  div = (HtmlDivision) object;
-								Node span = div.getChildNodes().item(1);
+								Node span = div.getChildNodes().item(0);
 								String text = span.getTextContent();
 								Pattern p = Pattern.compile("(ocena: )([0-9]{1}\\.[0-9]{1,2})");
 								Matcher matcher = p.matcher(text);
