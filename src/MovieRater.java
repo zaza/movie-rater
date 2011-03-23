@@ -70,6 +70,7 @@ public class MovieRater {
 		result = result.replace("avi", "");
 		result = result.replace("bbc", "");
 		result = result.replace("bbs", "");
+		result = result.replace("pal", "");
 		result = result.replace("bigfags", "");
 		result = result.replace("bluray", "");
 		result = result.replace("blu ray", "");
@@ -82,6 +83,7 @@ public class MovieRater {
 		result = result.replace("dvbrip", "");
 		result = result.replace("dvdscr", "");
 		result = result.replace("dvdrip", "");
+		result = result.replace("dvd9-br", "");
 		result = result.replace("dvd", "");
 		result = result.replace("french", "");
 		result = result.replace("horror", "");
@@ -101,6 +103,7 @@ public class MovieRater {
 		result = result.replace("readnfo", "");
 		result = result.replace("rip", "");
 		result = result.replace("rmvbhunters", "");
+		result = result.replace("rmv busters", "");
 		result = result.replace("rmvb", "");
 		result = result.replace("subbed", "");
 		result = result.replace("thiller", "");

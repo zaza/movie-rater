@@ -16,13 +16,14 @@ public class MovieRaterTest extends TestCase {
 		assertEquals("notebook pamietnik", MovieRater.extractMovieName("The_Notebook_-_Pamietnik_2004_DVDRip_LektorPL"));
 		assertEquals("kto nigdy nie", MovieRater.extractMovieName("Kto_nigdy_nie_2006_DVDRip_RMVB_PL_audioksiazki.org"));
 		assertEquals("ed wood", MovieRater.extractMovieName("Ed.Wood.1994.DVDRip.DivX-MDX"));
-		
 		assertEquals("futurama into wild green yonder", MovieRater.extractMovieName("Futurama.Into.The.Wild.Green.Yonder.2009.PROPER.DVDRiP.XViD-UNTOUCHED"));
 		assertEquals("after sunset", MovieRater.extractMovieName("After.the.Sunset.DVDrip.XviD-KJS"));
 		assertEquals("centurion", MovieRater.extractMovieName("Centurion.480p.BRRip.Napisy.PL"));
 		assertEquals("wybuchowa para", MovieRater.extractMovieName("Wybuchowa Para WTOPiONE NAPiSY PL")); 
 		assertEquals("nausicaä z doliny wiatru", MovieRater.extractMovieName("1984 [eng]_ Nausicaä z Doliny Wiatru (Kaze no tani no Naushika)"));
 		assertEquals("ksiaze persi piaski czasu", MovieRater.extractMovieName("ksiaze persi piaski czasu(2010) DVDRip"));
+		assertEquals("blood of heroes", MovieRater.extractMovieName("The Blood of Heroes[1989]-DIVX.x264-RmvBusterS"));
+		assertEquals("last king of scotland", MovieRater.extractMovieName("The.Last.King.of.Scotland.2006.PL.PAL.DVD9-BR"));
 	}
 	
 	public void testScanDirs() {
