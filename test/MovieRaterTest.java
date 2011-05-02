@@ -10,6 +10,16 @@ import junit.framework.TestCase;
 import org.xml.sax.SAXException;
 
 public class MovieRaterTest extends TestCase {
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		new File("test/data/category/GĘŚLĄ JAŹŃ").mkdirs();
+		new File("test/data/category/jaźń").mkdirs();
+		new File("test/data/category/ZAŻÓŁĆ").mkdirs();
+		new File("test/data/category/zażółć gęślą").mkdirs();
+	}
+	
 	public void testExtractMovieName() {
 		assertEquals("atramentowe serce", MovieRater.extractMovieName("AtramentoweSerceDVDRipLektorPL"));
 		assertEquals("lody na patyku", MovieRater.extractMovieName("LodyNaPatyku"));
@@ -94,6 +104,21 @@ public class MovieRaterTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		new File("test/data/test.txt").delete();
+		delete(new File("test/data/category"));
 	}
 	
+	public static void delete(final File f) throws IOException {
+		if (!f.exists())
+			return;
+
+		if (f.isDirectory()) {
+			final File[] items = f.listFiles();
+			if (items != null) {
+				for (File c : items)
+					delete(c);
+			}
+		}
+		if (f.delete())
+			return;
+	}
 }
