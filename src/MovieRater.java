@@ -189,7 +189,7 @@ public class MovieRater {
 					}
 					HtmlForm searchForm = page.getForms().get(0);
 					searchForm.getInputByName("q").setValueAttribute(subdir);
-					HtmlSubmitInput submit = (HtmlSubmitInput) searchForm.getByXPath("//input").get(1);
+					HtmlSubmitInput submit = (HtmlSubmitInput) searchForm.getByXPath("//input[@type='submit']").get(0);
 					page = submit.click();
 
 					List<Item> results = new ArrayList<Item>();
@@ -244,7 +244,7 @@ public class MovieRater {
 			if (n instanceof HtmlListItem) {
 				HtmlListItem listItem = (HtmlListItem) n;
 				List<?> as = listItem.getByXPath("//a[@class='searchResultTitle']");
-				for (Iterator it2 = as.iterator(); it2.hasNext();) {
+				for (Iterator<?> it2 = as.iterator(); it2.hasNext();) {
 					Object a = (Object) it2.next();
 					if (a instanceof HtmlAnchor) {
 						HtmlAnchor anchor = (HtmlAnchor) a;
@@ -260,7 +260,7 @@ public class MovieRater {
 							Object object = (Object) it3.next();
 							if (object instanceof HtmlDivision ) {
 								HtmlDivision  div = (HtmlDivision) object;
-								Node span = div.getChildNodes().item(1);
+								Node span = div.getChildNodes().item(0);
 								String text = span.getTextContent();
 								Pattern p = Pattern.compile("(ocena: )([0-9]{1}\\.[0-9]{1,2})");
 								Matcher matcher = p.matcher(text);
