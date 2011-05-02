@@ -33,6 +33,8 @@ public class MovieRaterTest extends TestCase {
 		assertEquals("wybuchowa para", MovieRater.extractMovieName("Wybuchowa Para WTOPiONE NAPiSY PL")); 
 		assertEquals("nausicaä z doliny wiatru", MovieRater.extractMovieName("1984 [eng]_ Nausicaä z Doliny Wiatru (Kaze no tani no Naushika)"));
 		assertEquals("ksiaze persi piaski czasu", MovieRater.extractMovieName("ksiaze persi piaski czasu(2010) DVDRip"));
+
+		assertEquals("of gods and men", MovieRater.extractMovieName("Of.Gods.And.Men.LiMiTED.DVDRip.XviD-DoNE")); 
 	}
 	
 	public void testScanDirs() {
