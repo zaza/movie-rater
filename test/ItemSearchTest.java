@@ -126,7 +126,16 @@ public class ItemSearchTest extends TestCase {
 		assertNotNull(it);
 		assertEquals("Książę Persji: Piaski Czasu / Prince of Persia: The Sands of Time", it.title);
 	}
-	
+
+	public void testBrothersBloom() throws SAXException, IOException {
+		HtmlPage page = webClient.getPage("file:/" + workdir
+				+ "/test/data/results/brothers-bloom.html");
+		MovieRater.search(page, "brothers bloom", "test", results);
+		Item it = MovieRater.findBestMatch("brothers bloom", results);
+		assertNotNull(it);
+		assertEquals("Niesamowici bracia Bloom / Brothers Bloom, The", it.title);
+	}
+
 	public void testLifeOfBrian() throws SAXException, IOException {
 		HtmlPage page = webClient.getPage("file:/" + workdir
 				+ "/test/data/results/life-of-brian.html");
