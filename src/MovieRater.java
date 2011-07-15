@@ -251,15 +251,15 @@ public class MovieRater {
 					Object a = (Object) it2.next();
 					if (a instanceof HtmlAnchor) {
 						HtmlAnchor anchor = (HtmlAnchor) a;
-						Node li = anchor.getParentNode().getParentNode();
-						// TODO: convert to java
+						// TODO: 'skip [osoba]', convert to java
+						// Node li = anchor.getParentNode().getParentNode();
 						// osoba = li.search("span[text()='[osoba]']")[0]
 						// if (!osoba.nil?) # skip [osoba]
 						// next
 						// end
 						String title = anchor.getTextContent().trim();
 						List<?> searchResultRatings = listItem.getByXPath("//div[@class='searchResultRating']");
-						for (Iterator it3 = searchResultRatings.iterator(); it3.hasNext();) {
+						for (Iterator<?> it3 = searchResultRatings.iterator(); it3.hasNext();) {
 							Object object = (Object) it3.next();
 							if (object instanceof HtmlDivision ) {
 								HtmlDivision  div = (HtmlDivision) object;
@@ -285,7 +285,7 @@ public class MovieRater {
 			}
 		});
 		Map<String, Item> result = new LinkedHashMap<String, Item>();
-		for (Iterator it = list.iterator(); it.hasNext();) {
+		for (Iterator<Item> it = list.iterator(); it.hasNext();) {
 			Map.Entry<String, Item> entry = (Map.Entry)it.next();
 			result.put(entry.getKey(), entry.getValue());
 		}

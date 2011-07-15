@@ -34,6 +34,7 @@ public class MovieRaterTest extends TestCase {
 		assertEquals("ksiaze persi piaski czasu", MovieRater.extractMovieName("ksiaze persi piaski czasu(2010) DVDRip"));
 		assertEquals("blood of heroes", MovieRater.extractMovieName("The Blood of Heroes[1989]-DIVX.x264-RmvBusterS"));
 		assertEquals("last king of scotland", MovieRater.extractMovieName("The.Last.King.of.Scotland.2006.PL.PAL.DVD9-BR"));
+		assertEquals("of gods and men", MovieRater.extractMovieName("Of.Gods.And.Men.LiMiTED.DVDRip.XviD-DoNE")); 
 	}
 	
 	public void testScanDirs() {
