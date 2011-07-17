@@ -94,6 +94,7 @@ public class MovieRater {
 		result = result.replace("limited", "");
 		result = result.replace("nappl", "");
 		result = result.replace("wtopione napisy", "");
+		result = result.replace("napisy wklejone", "");
 		result = result.replace("napisy", "");
 		result = result.replace("p24", "");
 		result = result.replace("po polsku", "");
@@ -265,10 +266,14 @@ public class MovieRater {
 								HtmlDivision  div = (HtmlDivision) object;
 								Node span = div.getChildNodes().item(0);
 								String text = span.getTextContent();
-								Pattern p = Pattern.compile("(ocena: )([0-9]{1}\\.[0-9]{1,2})");
+								Pattern p = Pattern.compile("([0-9]{1},[0-9]{1,2})");
 								Matcher matcher = p.matcher(text);
-								if (matcher.find())
-									results.add(new Item(dir, title, Float.parseFloat(matcher.group(2)), category));
+								if (matcher.find()) {
+									String f = matcher.group(0);
+									f = f.replace(',', '.');
+									float rating = Float.parseFloat(f);
+									results.add(new Item(dir, title, rating, category));
+								}
 							}
 						}
 					}

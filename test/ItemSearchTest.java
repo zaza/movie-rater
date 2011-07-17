@@ -124,7 +124,7 @@ public class ItemSearchTest extends TestCase {
 		MovieRater.search(page, "ksiaze persji piaski czasu", "test", results);
 		Item it = MovieRater.findBestMatch("ksiaze persji piaski czasu", results);
 		assertNotNull(it);
-		assertEquals("Książę Persji: Piaski Czasu / Prince of Persia: The Sands of Time", it.title);
+		assertEquals("Książę Persji: Piaski czasu / Prince of Persia: The Sands of Time", it.title);
 	}
 
 	public void testBrothersBloom() throws SAXException, IOException {
