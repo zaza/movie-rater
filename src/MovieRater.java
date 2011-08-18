@@ -48,6 +48,8 @@ public class MovieRater {
 
 		result = result.toLowerCase();
 
+		result = result.replace(":)", "");
+		result = result.replace(";)", "");
 		result = result.replace("r5.line", "");
 		result = result.replace("dd5.1", "");
 		result = result.replace("audioksiazki.org", "");
@@ -63,6 +65,7 @@ public class MovieRater {
 		result = result.replace(" hd", "");
 		result = result.replace(" !", "");
 		result = result.replace(" cz ", "");
+		result = result.replace(" tv", "");
 		result = result.replace(" scr", "");
 		result = result.replace("480p", "");
 		result = result.replace("720p", "");
@@ -70,13 +73,15 @@ public class MovieRater {
 		result = result.replace("avi", "");
 		result = result.replace("bbc", "");
 		result = result.replace("bbs", "");
-		result = result.replace("pal", "");
+		result = result.replace("blu-rip", "");
+		result = result.replace("c ", "");
 		result = result.replace("bigfags", "");
 		result = result.replace("bluray", "");
 		result = result.replace("blu ray", "");
 		result = result.replace("brrip", "");
 		result = result.replace("director cut", "");
 		result = result.replace("divx", "");
+		result = result.replace("dokument", "");
 		result = result.replace("domino", "");
 		result = result.replace("drp", "");
 		result = result.replace("dub", "");
@@ -85,18 +90,23 @@ public class MovieRater {
 		result = result.replace("dvdrip", "");
 		result = result.replace("dvd9-br", "");
 		result = result.replace("dvd", "");
+		result = result.replace("film", "");
+		result = result.replace("film polski", "");
 		result = result.replace("french", "");
+		result = result.replace("hdtv", "");
 		result = result.replace("horror", "");
 		result = result.replace("komedia rom", "");
 		result = result.replace("koniec", "");
 		result = result.replace("lektorpl", "");
 		result = result.replace("lektor", "");
+		result = result.replace("li mited", "");
 		result = result.replace("limited", "");
 		result = result.replace("nappl", "");
 		result = result.replace("wtopione napisy", "");
 		result = result.replace("napisy wklejone", "");
 		result = result.replace("napisy", "");
 		result = result.replace("p24", "");
+		result = result.replace("pal", "");
 		result = result.replace("po polsku", "");
 		result = result.replace("proper", "");
 		result = result.replace("super custon", "");
@@ -106,6 +116,7 @@ public class MovieRater {
 		result = result.replace("rmvbhunters", "");
 		result = result.replace("rmv busters", "");
 		result = result.replace("rmvb", "");
+		result = result.replace("skończony", "");
 		result = result.replace("subbed", "");
 		result = result.replace("thiller", "");
 		result = result.replace("untouched", "");

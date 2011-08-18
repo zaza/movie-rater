@@ -35,7 +35,13 @@ public class MovieRaterTest extends TestCase {
 		assertEquals("blood of heroes", MovieRater.extractMovieName("The Blood of Heroes[1989]-DIVX.x264-RmvBusterS"));
 		assertEquals("last king of scotland", MovieRater.extractMovieName("The.Last.King.of.Scotland.2006.PL.PAL.DVD9-BR"));
 		assertEquals("hanna", MovieRater.extractMovieName("HANNA napisy wklejone"));
-		assertEquals("of gods and men", MovieRater.extractMovieName("Of.Gods.And.Men.LiMiTED.DVDRip.XviD-DoNE")); 
+		assertEquals("of gods and men", MovieRater.extractMovieName("Of.Gods.And.Men.LiMiTED.DVDRip.XviD-DoNE"));
+		assertEquals("unknown", MovieRater.extractMovieName("Unknown.2011 - skończony ;)"));
+		assertEquals("rytual", MovieRater.extractMovieName("Rytual blu-rip 480p pl"));
+		assertEquals("gra o tron", MovieRater.extractMovieName("Gra o tron PL.HDTV.XviD (sezon1)"));
+		assertEquals("chrzest", MovieRater.extractMovieName("Chrzest film pl"));
+		assertEquals("eclipse", MovieRater.extractMovieName("c.Eclipse.DVDRip.XviD-DiAMOND"));
+		assertEquals("bitwa o czarnobyl", MovieRater.extractMovieName("Bitwa.O.Czarnobyl.Dokument.TVRip"));
 	}
 	
 	public void testScanDirs() {
