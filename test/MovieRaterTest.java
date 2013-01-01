@@ -42,6 +42,17 @@ public class MovieRaterTest extends TestCase {
 		assertEquals("chrzest", MovieRater.extractMovieName("Chrzest film pl"));
 		assertEquals("eclipse", MovieRater.extractMovieName("c.Eclipse.DVDRip.XviD-DiAMOND"));
 		assertEquals("bitwa o czarnobyl", MovieRater.extractMovieName("Bitwa.O.Czarnobyl.Dokument.TVRip"));
+		assertEquals("hustawka", MovieRater.extractMovieName("Hustawka film polski"));
+		assertEquals("flash of genius", MovieRater.extractMovieName("Flash.Of.Genius[2008]DvDrip-aXXo"));
+		assertEquals("last house on left", MovieRater.extractMovieName("The Last House On The Left[2009][Unrated Edition]DvDrip-aXXo"));
+		assertEquals("80 milionow", MovieRater.extractMovieName("psig-80.milionow.2011.pl.dvdrip.xvid.avi"));
+		assertEquals("madagaskar 3", MovieRater.extractMovieName("Madagaskar 3  pl  1080 p"));
+		assertEquals("trucizna nasza powszednia", MovieRater.extractMovieName("Trucizna nasza powszednia.mp4"));
+		assertEquals("contagion", MovieRater.extractMovieName("Contagion.2011.720p.BluRay.X264-AMIABLE"));
+		assertEquals("color of money", MovieRater.extractMovieName("The Color Of Money.1986.DVDRip.x264-VGL"));
+		assertEquals("intouchables", MovieRater.extractMovieName("Intouchables 2011 720p BDRip x264 ac3 sub (mkv) [greyshadow]-=-{{T.M.R.G}}"));
+		assertEquals("soom breath", MovieRater.extractMovieName("Soom.Breath.2007.DVDRIP.Korean.Eng subs.soulcreeper"));
+		// assertEquals("ma byc", MovieRater.extractMovieName("jest"));
 	}
 	
 	public void testScanDirs() {

@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="MovieRater"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="e:\media\movies #,music,sport"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="z:\media\movies #seen,muzyczny,sport"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="movie-rater"/>
 </launchConfiguration>

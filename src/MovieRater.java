@@ -69,12 +69,15 @@ public class MovieRater {
 		result = result.replace(" scr", "");
 		result = result.replace("480p", "");
 		result = result.replace("720p", "");
+		result = result.replace("1080p", "");
+		result = result.replace("1080 p", "");
 		result = result.replace("ac3", "");
 		result = result.replace("avi", "");
 		result = result.replace("bbc", "");
 		result = result.replace("bbs", "");
+		result = result.replace("bdrip", "");
 		result = result.replace("blu-rip", "");
-		result = result.replace("c ", "");
+		result = result.replaceAll("^c[ ]+", "");
 		result = result.replace("bigfags", "");
 		result = result.replace("bluray", "");
 		result = result.replace("blu ray", "");
@@ -90,17 +93,21 @@ public class MovieRater {
 		result = result.replace("dvdrip", "");
 		result = result.replace("dvd9-br", "");
 		result = result.replace("dvd", "");
-		result = result.replace("film", "");
+		result = result.replace("dv d", "");
+		result = result.replace("eng", "");
 		result = result.replace("film polski", "");
+		result = result.replace("film", "");
 		result = result.replace("french", "");
 		result = result.replace("hdtv", "");
 		result = result.replace("horror", "");
 		result = result.replace("komedia rom", "");
 		result = result.replace("koniec", "");
+		result = result.replace("korean", "");
 		result = result.replace("lektorpl", "");
 		result = result.replace("lektor", "");
 		result = result.replace("li mited", "");
 		result = result.replace("limited", "");
+		result = result.replace("mp4", "");
 		result = result.replace("nappl", "");
 		result = result.replace("wtopione napisy", "");
 		result = result.replace("napisy wklejone", "");
@@ -108,6 +115,7 @@ public class MovieRater {
 		result = result.replace("p24", "");
 		result = result.replace("pal", "");
 		result = result.replace("po polsku", "");
+		result = result.replace("psig-", "");
 		result = result.replace("proper", "");
 		result = result.replace("super custon", "");
 		result = result.replace("r5", "");
@@ -117,12 +125,14 @@ public class MovieRater {
 		result = result.replace("rmv busters", "");
 		result = result.replace("rmvb", "");
 		result = result.replace("skończony", "");
+		result = result.replace("soulcreeper", "");
 		result = result.replace("subbed", "");
+		result = result.replace("subs", "");
 		result = result.replace("thiller", "");
 		result = result.replace("untouched", "");
 		result = result.replace("unrated", "");
-		result = result.replace("x264", "");
-		result = result.replaceAll("xvid-?.*","");
+		result = result.replaceAll("x264-?.*", "");
+		result = result.replaceAll("xvid-?.*", "");
 		result = result.replace("-80m", "");
 		result = result.replace("-alliance", "");
 		result = result.replace("-axxo", "");
@@ -231,10 +241,16 @@ public class MovieRater {
 			if (item.title.equalsIgnoreCase(dir)) { // perfect match!
 				return item;
 			}
+			if (removePolishCharacters(item.title).equalsIgnoreCase(dir)) {
+				return item;
+			}
 			// Polish / English
 			String[] split = item.title.split("/");
 			for (int i = 0; i < split.length; i++) {
 				if (split[i].trim().equalsIgnoreCase(dir)) { // perfect match!
+					return item;
+				}
+				if (removePolishCharacters(split[i].trim()).equalsIgnoreCase(dir)) {
 					return item;
 				}
 				// title : subtitle
@@ -248,6 +264,20 @@ public class MovieRater {
 		return bestMatch;
 	}
 
+	private static String removePolishCharacters(String polish) {
+		String result = polish;
+		result = result.replace("ą", "a");
+		result = result.replace("ć", "c");
+		result = result.replace("ę", "e");
+		result = result.replace("ł", "l");
+		result = result.replace("ń", "n");
+		result = result.replace("ó", "o");
+		result = result.replace("ś", "s");
+		result = result.replace("ż", "z");
+		result = result.replace("ź", "z");
+		return result;
+	}
+	
 	public static void search(HtmlPage page, String dir, String category, List<Item> results) {
 		HtmlElement ul = page.getElementById("searchFixCheck");
 		// TODO:
@@ -324,7 +354,7 @@ public class MovieRater {
 		File file = new File(filePath);
 		if (!file.exists() || file.isDirectory())
 			return result;
-		System.out.println("Found cache file:" + filePath);
+		System.out.println("Found cache file: " + filePath);
 		FileReader fr = new FileReader(filePath);
 		BufferedReader br = new BufferedReader(fr);
 		String s;

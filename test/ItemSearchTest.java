@@ -144,4 +144,22 @@ public class ItemSearchTest extends TestCase {
 		assertNotNull(it);
 		assertEquals("Żywot Briana / Life of Brian", it.title);
 	}
+
+	public void testDiabel() throws SAXException, IOException {
+		HtmlPage page = webClient.getPage("file:/" + workdir
+				+ "/test/data/results/diabel.html");
+		MovieRater.search(page, "diabel", "test", results);
+		Item it = MovieRater.findBestMatch("diabel", results);
+		assertNotNull(it);
+		assertEquals("Diabeł", it.title);
+	}
+
+	public void testMrNice() throws SAXException, IOException {
+		HtmlPage page = webClient.getPage("file:/" + workdir
+				+ "/test/data/results/mr-nice.html");
+		MovieRater.search(page, "mr nice", "test", results);
+		Item it = MovieRater.findBestMatch("mr nice", results);
+		assertNotNull(it);
+		assertEquals("Mr. Nice", it.title);
+	}
 }
