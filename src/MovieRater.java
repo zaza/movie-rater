@@ -169,7 +169,7 @@ public class MovieRater {
 		if (path.isDirectory()) {
 			String[] list = path.list();
 			for (int i = 0; i < list.length; i++) {
-				File subdir = new File(path.getAbsolutePath() + "\\" + list[i]);
+				File subdir = new File(path, list[i]);
 				if (subdir.isDirectory() && !excludes.contains(list[i])) {
 					result.put(list[i], subdir.list());
 				}
