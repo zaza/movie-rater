@@ -1,9 +1,13 @@
+import info.talacha.filmweb.api.FilmwebApi;
+import info.talacha.filmweb.models.Film;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,19 +23,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.ElementNotFoundException;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlDivision;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlListItem;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
 public class MovieRater {
 
@@ -198,27 +190,9 @@ public class MovieRater {
 					item = movies_cache.get(subdirs[i]);
 					System.out.print("[cache] ");
 				} else {
-					final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
-					webClient.setThrowExceptionOnScriptError(false);
-					webClient.setJavaScriptEnabled(false);
-
-					HtmlPage page = webClient.getPage("http://www.filmweb.pl");
-					HtmlAnchor link = null;
-					try {
-						link = page.getAnchorByHref("http://www.filmweb.pl");
-					} catch (ElementNotFoundException e) {
-						// ignore
-					}
-					if (link != null) {
-						page = link.click();
-					}
-					HtmlForm searchForm = page.getForms().get(0);
-					searchForm.getInputByName("q").setValueAttribute(subdir);
-					HtmlSubmitInput submit = (HtmlSubmitInput) searchForm.getByXPath("//input[@type='submit']").get(0);
-					page = submit.click();
 
 					List<Item> results = new ArrayList<Item>();
-					search(page, subdirs[i], category, results);
+					search(subdir, category, results);
 					Item it = findBestMatch(subdirs[i], results);
 					if (it != null)
 						item = it; // found!
@@ -278,47 +252,26 @@ public class MovieRater {
 		return result;
 	}
 	
-	public static void search(HtmlPage page, String dir, String category, List<Item> results) {
-		HtmlElement ul = page.getElementById("searchFixCheck");
-		// TODO:
-		if (ul == null) 
-			return;
-		Iterable<HtmlElement> lis = ul.getChildElements();
-		for (Iterator<HtmlElement> it = lis.iterator(); it.hasNext();) {
-			HtmlElement n = it.next();
-			if (n instanceof HtmlListItem) {
-				HtmlListItem listItem = (HtmlListItem) n;
-				List<?> as = listItem.getByXPath("//a[@class='searchResultTitle']");
-				for (Iterator<?> it2 = as.iterator(); it2.hasNext();) {
-					Object a = (Object) it2.next();
-					if (a instanceof HtmlAnchor) {
-						HtmlAnchor anchor = (HtmlAnchor) a;
-						// TODO: 'skip [osoba]', convert to java
-						// Node li = anchor.getParentNode().getParentNode();
-						// osoba = li.search("span[text()='[osoba]']")[0]
-						// if (!osoba.nil?) # skip [osoba]
-						// next
-						// end
-						String title = anchor.getTextContent().trim();
-						List<?> searchResultRatings = listItem.getByXPath("//div[@class='searchResultRating']");
-						for (Iterator<?> it3 = searchResultRatings.iterator(); it3.hasNext();) {
-							Object object = (Object) it3.next();
-							if (object instanceof HtmlDivision ) {
-								HtmlDivision  div = (HtmlDivision) object;
-								Node span = div.getChildNodes().item(0);
-								String text = span.getTextContent();
-								Pattern p = Pattern.compile("([0-9]{1},[0-9]{1,2})");
-								Matcher matcher = p.matcher(text);
-								if (matcher.find()) {
-									String f = matcher.group(0);
-									f = f.replace(',', '.');
-									float rating = Float.parseFloat(f);
-									results.add(new Item(dir, title, rating, category));
-								}
-							}
-						}
-					}
-				}
+	public static void search(String dir, String category, List<Item> results) {
+		FilmwebApi fa = new FilmwebApi();
+		ArrayList<Film> filmList = fa.getFilmList(dir);
+		for (Film film : filmList) {
+			String title = film.getTitle();
+			String polishTitle = film.getPolishTitle();
+			String itemTitle = null;
+			if (title == null) {
+				itemTitle = polishTitle;
+			} else if (polishTitle == null) {
+				itemTitle = title;
+			}  else {
+				itemTitle = polishTitle + "/" + title;
+			}
+			
+			DecimalFormat df = new DecimalFormat("#.##");
+			if (film.getRate()!=null) { //'5 days of war'
+			String rounded = df.format(film.getRate().floatValue());
+			float rating = Float.parseFloat(rounded);
+			results.add(new Item(dir, itemTitle, rating, category));
 			}
 		}
 	}

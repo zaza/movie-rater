@@ -7,7 +7,6 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for default package");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(MovieRaterTest.class);
-		suite.addTestSuite(ItemSearchTest.class);
 		suite.addTestSuite(ItemTest.class);
 		//$JUnit-END$
 		return suite;
