@@ -338,8 +338,8 @@ public class MovieRater {
 		return result;
 	}
 
-	public static void writeSortedItemsToFile(Map<String, Item> sortedItems, String filePath) throws IOException {
-		BufferedWriter out = new BufferedWriter(new FileWriter(filePath));
+	public static void writeSortedItemsToFile(Map<String, Item> sortedItems, File file) throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		for (Iterator<Item> it = sortedItems.values().iterator(); it.hasNext();) {
 			Item item = it.next();
 			out.write(item.toString());
@@ -400,7 +400,7 @@ public class MovieRater {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			Calendar c1 = Calendar.getInstance(); // today
-			writeSortedItemsToFile(items_sorted, args[0] + "\\"	+ sdf.format(c1.getTime()) + ".txt");
+			writeSortedItemsToFile(items_sorted, new File(args[0], sdf.format(c1.getTime()) + ".txt"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -77,7 +77,7 @@ public class MovieRaterTest extends TestCase {
 		map.put(subdirs[3], new Item(subdirs[3], "d title", 6.6f, "category"));
 		map.put("E", new Item("E", "", 0.0f, "category")); // not found
 		
-		MovieRater.writeSortedItemsToFile(map /*not sorted*/, "test/data/test.txt");
+		MovieRater.writeSortedItemsToFile(map /*not sorted*/, new File("test/data/test.txt"));
 		
 		Map<String, Item> cachedMap = MovieRater.readCache("test/data/");
 		
@@ -103,7 +103,7 @@ public class MovieRaterTest extends TestCase {
 		map.put(subdirs[2], new Item(subdirs[2], "c title", 7.5f, "category"));
 		map.put(subdirs[3], new Item(subdirs[3], "d title", 6.6f, "category"));
 		
-		MovieRater.writeSortedItemsToFile(map /*not sorted*/, "test/data/test.txt");
+		MovieRater.writeSortedItemsToFile(map /*not sorted*/, new File("test/data/test.txt"));
 		
 		Map<String, Item> cachedMap = MovieRater.readCache("test/data");
 		cachedMap.put("E", new Item("E", "e movie", 5.1f, "category")); // no longer exists in FS
