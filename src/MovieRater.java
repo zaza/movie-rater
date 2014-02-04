@@ -114,6 +114,7 @@ public class MovieRater {
 		result = result.replace("napisy", "");
 		result = result.replace("p24", "");
 		result = result.replace("pal", "");
+		result = result.replace("plsubbed", "");
 		result = result.replace("po polsku", "");
 		result = result.replace("psig-", "");
 		result = result.replace("proper", "");
@@ -277,7 +278,7 @@ public class MovieRater {
 		result = result.replace("ź", "z");
 		return result;
 	}
-	
+
 	public static void search(HtmlPage page, String dir, String category, List<Item> results) {
 		HtmlElement ul = page.getElementById("searchFixCheck");
 		// TODO:
