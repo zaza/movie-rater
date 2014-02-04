@@ -47,6 +47,7 @@ public class MovieRater {
 		result = result.replace("r5.line", "");
 		result = result.replace("dd5.1", "");
 		result = result.replace("audioksiazki.org", "");
+		result = result.replace("_by_zwykły_grajek", "");
 		result = result.replace(".", " ");
 		result = result.replace("_", " ");
 		result = result.replaceAll("\\[.*\\]", "");
@@ -61,6 +62,7 @@ public class MovieRater {
 		result = result.replace(" cz ", "");
 		result = result.replace(" tv", "");
 		result = result.replace(" scr", "");
+		result = result.replace("2ch", "");
 		result = result.replace("480p", "");
 		result = result.replace("720p", "");
 		result = result.replace("1080p", "");
@@ -105,6 +107,7 @@ public class MovieRater {
 		result = result.replace("nappl", "");
 		result = result.replace("wtopione napisy", "");
 		result = result.replace("napisy wklejone", "");
+		result = result.replace("napisyplwklejone", "");
 		result = result.replace("napisy", "");
 		result = result.replace("p24", "");
 		result = result.replace("pal", "");
@@ -125,8 +128,11 @@ public class MovieRater {
 		result = result.replace("thiller", "");
 		result = result.replace("untouched", "");
 		result = result.replace("unrated", "");
+		result = result.replace("web-dl", "");
+		result = result.replace("zektorm", "");
 		result = result.replaceAll("x264-?.*", "");
 		result = result.replaceAll("xvid-?.*", "");
+		result = result.replace("-720", "");
 		result = result.replace("-80m", "");
 		result = result.replace("-alliance", "");
 		result = result.replace("-axxo", "");
@@ -146,6 +152,7 @@ public class MovieRater {
 		result = result.replace("-mdx", "");
 		result = result.replace("-psig", "");
 		result = result.replace("-ruby", "");
+		result = result.replace("-wck", "");
 		result = result.replace("-vision", "");
 		result = result.replace("-xan-0", "");
 		result = result.replace("klaxxon", "");
