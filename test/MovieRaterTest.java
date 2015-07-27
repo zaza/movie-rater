@@ -52,6 +52,14 @@ public class MovieRaterTest extends TestCase {
 		assertEquals("color of money", MovieRater.extractMovieName("The Color Of Money.1986.DVDRip.x264-VGL"));
 		assertEquals("intouchables", MovieRater.extractMovieName("Intouchables 2011 720p BDRip x264 ac3 sub (mkv) [greyshadow]-=-{{T.M.R.G}}"));
 		assertEquals("soom breath", MovieRater.extractMovieName("Soom.Breath.2007.DVDRIP.Korean.Eng subs.soulcreeper"));
+		assertEquals("firma", MovieRater.extractMovieName("firma-wck.avi"));
+		assertEquals("rear window", MovieRater.extractMovieName("rear_window_1954_DVDRip_by_zwykły_grajek"));
+		assertEquals("to rome with love", MovieRater.extractMovieName("To Rome With Love 480p ac3 2Ch pl 2012.avi"));
+		assertEquals("apocalypse now redux", MovieRater.extractMovieName("Apocalypse.Now.Redux.DVDRIP-ZEKTORM.mp4"));
+		assertEquals("end watch", MovieRater.extractMovieName("END-WATCH-720"));
+		assertEquals("uklad zamkniety", MovieRater.extractMovieName("uklad zamkniety.2013.pl.web-dl.xvid.ac3-sav.avi"));
+		assertEquals("demony", MovieRater.extractMovieName("Demony.2012.DVDRip.NapisyPLWklejone.avi"));
+		assertEquals("nieproszeni goscie uninvited", MovieRater.extractMovieName("Nieproszeni_Goscie-The_Uninvited_2009-DVDRip-XviD-Lektor_PL-.avi"));
 		// assertEquals("ma byc", MovieRater.extractMovieName("jest"));
 	}
 	
